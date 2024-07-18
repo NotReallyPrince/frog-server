@@ -169,6 +169,7 @@ function calculateYearsAgo(month, year) {
 export const createUserHelper = async (createUserData: CreateUser):Promise<any> => {
   
   const isUser = await prismaService.user.findFirst({ where: { tgId: createUserData.id } });
+
   
   if(isUser)
     return getUserDetailsById(isUser.id);
@@ -189,7 +190,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
     }
   })
 
-  const userCount = prismaService.user.count()
+  const userCount:number = await prismaService.user.count()
 
   const generatedPoints = generatePointsOnRegister(Math.round(years), userCount);
 
@@ -229,6 +230,8 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
 
 
 export const getUserDetailsById = async (id):Promise<any> => {
+  const usersCount:number = await prismaService.user.count();
+
   const user:any = await prismaService.user.findFirst({ 
     where: { id },
     include: {
@@ -239,6 +242,8 @@ export const getUserDetailsById = async (id):Promise<any> => {
       }
     }
   })
+
+  const age = generatePointsOnRegister(parseInt(user.createdAt), usersCount)
 
   const referedBy = await prismaService.referal.findFirst({ 
     where: { userId: user.id },
@@ -257,6 +262,7 @@ export const getUserDetailsById = async (id):Promise<any> => {
   if(referedBy)
     user.referedBy = referedBy.referedBy;
   
+  user.age = age;
 
   return user
 
@@ -264,6 +270,7 @@ export const getUserDetailsById = async (id):Promise<any> => {
 
 
 export const getUserDetailsByTgId = async (id):Promise<any> => {
+  const usersCount:number = await prismaService.user.count();
   const user:any = await prismaService.user.findFirst({ 
     where: { tgId: id },
     include: {
@@ -274,6 +281,8 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
       }
     }
   })
+
+  const age = generatePointsOnRegister(parseInt(user.createdAt), usersCount)
 
   const referedBy = await prismaService.referal.findFirst({ 
     where: { userId: user.id },
@@ -289,8 +298,10 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
     }
   })
 
+  user.age = age;
+
   if(referedBy)
-  user.referedBy = referedBy.referedBy;
+    user.referedBy = referedBy.referedBy;
   
 
   return user

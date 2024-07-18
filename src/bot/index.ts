@@ -18,7 +18,7 @@ bot.command('start',async ctx => {
 
   const user: any = await createUserHelper(userDetails)
   
-  console.log(user);
+  // console.log(user);
 
   const inviteUrl = `https://t.me/giraffe_testbot?start=${ctx.from.id}`
   const text = 'Invite Your friends'

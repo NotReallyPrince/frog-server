@@ -1,6 +1,6 @@
 const LAKH:number = 100000
 
-export const generatePointsOnRegister = (accountAge: number, totalUsers): number => {
+export const generatePointsOnRegister = (accountAge: number, totalUsers:number): number => {
     let boost = 0;
     if(totalUsers < LAKH){
         boost = 30;
@@ -11,6 +11,11 @@ export const generatePointsOnRegister = (accountAge: number, totalUsers): number
     }
 
     let points = accountAge * 365 * 2
-    points = points + ((boost * points) / 100)
+
+    const addOnPoints =  points * (boost/100)
+
+    
+
+    points = points + addOnPoints
     return points
 }
