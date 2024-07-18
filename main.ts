@@ -15,12 +15,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Preflight requests
 
-// CORS configuration
-const corsOptions = {
-  origin: 'http://localhost:5173', // Your frontend URL
-  credentials: true, // Enable credentials
-};
-app.use(cors(corsOptions))
 app.use(bodyParser.json())
 
 
