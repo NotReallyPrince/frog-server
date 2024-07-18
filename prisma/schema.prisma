@@ -19,6 +19,7 @@ model User {
   userName    String? @default("")
   firstName   String? @default("")
   lastName    String? @default("")
+  isPremium   Boolean? @default(false)
   createdAt   String
   referels    Referal[] @relation("user")
   referedBy   Referal[] @relation("by")
