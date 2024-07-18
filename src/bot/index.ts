@@ -11,6 +11,7 @@ bot.command('start',async ctx => {
     firstName: ctx.from?.first_name,
     lastName: ctx.from?.last_name,
     userName:  ctx.from?.username,
+    isPremium: ctx.from.is_premium
   }
 
   if(referalId)
