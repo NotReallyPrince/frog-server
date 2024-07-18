@@ -41,11 +41,29 @@ router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
     return res.status(400).json({ message: "User ID is required" })
   }
 
-  getUserDetailsById(userId).then((user) => {
+  getUserDetailsByTgId(userId).then((user) => {
     const data = {
       points: user?.point?.point,
       agePoint: user?.age
     }
+    return res.status(200).json({data, message: 'Fetched successfully'})
+  }).catch(err => {
+    res.status(500).json({ err, message: "User details fetching failed" })
+  })
+})
+
+router.get('/age/:userId', (req: Request, res: Response) => {
+  const {userId} = req.params;
+
+  if(!userId){
+    return res.status(400).json({ message: "User ID is required" })
+  }
+
+  getUserDetailsByTgId(userId).then((user) => {
+    const data = {
+      age: user?.createdAt
+    }
+    
     return res.status(200).json({data, message: 'Fetched successfully'})
   }).catch(err => {
     res.status(500).json({ err, message: "User details fetching failed" })
