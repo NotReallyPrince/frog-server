@@ -10,6 +10,7 @@ export type CreateUser = {
   userName?: string;
   premium?: boolean;
   referedBy?: number;
+  isPremium?: boolean;
 }
 
 const creationDates = [
@@ -192,7 +193,10 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
 
   const userCount:number = await prismaService.user.count()
 
-  const generatedPoints = generatePointsOnRegister(Math.round(years), userCount);
+  let generatedPoints:number = generatePointsOnRegister(Math.round(years), userCount);
+
+  if(createUserData.isPremium)
+      generatedPoints += 1000;
 
   await prismaService.points.create(({
     data: {
@@ -219,7 +223,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
       },
       data: {
         point: {
-          increment: (generatedPoints * 20) / 100, // Adjust the increment value as needed
+          increment: Math.round(generatedPoints * (20 / 100)), // Adjust the increment value as needed
         },
       },
     });
