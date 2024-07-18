@@ -19,14 +19,21 @@ bot.command('start',async ctx => {
   const user: any = await createUserHelper(userDetails)
   
   console.log(user);
+
+  const inviteUrl = `https://t.me/giraffe_testbot?start=${ctx.from.id}`
+  const text = 'Invite Your friends'
   
 
   ctx.reply(
     `Hy ${user.firstName}, Welcome to frog community 🐸
-    ${user.referedBy?`You are refered by ${user.referedBy.firstName}`:''}
-      `,
+${user.referedBy?`You are refered by ${user.referedBy.firstName}`:''}
+share this link to invite your friends: https://t.me/giraffe_testbot?start=${ctx.from.id}`,
       Markup.inlineKeyboard([
-        Markup.button.webApp("View Store", 'https://google.com')
+        Markup.button.webApp("Lets Jump 🐸!", 'https://frog-client.netlify.app/'),
+        Markup.button.url(
+          "Share", 
+          `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
+        )
       ]),
   )
 })
