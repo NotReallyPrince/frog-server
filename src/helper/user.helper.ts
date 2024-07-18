@@ -223,7 +223,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
       },
       data: {
         point: {
-          increment: generatedPoints * (20 / 100), // Adjust the increment value as needed
+          increment: Math.round(generatedPoints * (20 / 100)), // Adjust the increment value as needed
         },
       },
     });
