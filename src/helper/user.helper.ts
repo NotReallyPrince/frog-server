@@ -177,7 +177,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
   
   const index = creationDates.findIndex(d => d.startId >= createUserData.id);
   const dateData = creationDates[index];
-  const years = await calculateYearsAgo(dateData?.m || 0,dateData?.y || 1)
+  const years = calculateYearsAgo(dateData?.m || 0, dateData?.y || 1)
 
 
   const user = await prismaService.user.create({
@@ -348,6 +348,7 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
 
 export const myFriendsList = async (tgId:number) => {
   const user = await getUserDetailsByTgId(tgId);
+  const userCount:number = await prismaService.user.count()
   const friends = await prismaService.referal.findMany({
     where: { referedById: user.id },
     select: {
@@ -357,6 +358,7 @@ export const myFriendsList = async (tgId:number) => {
           lastName: true,
           tgId: true,
           userName: true,
+          createdAt: true,
           point: {
             select: {
               point: true
@@ -365,6 +367,17 @@ export const myFriendsList = async (tgId:number) => {
         }
       }
     }
+  })
+
+  const data = friends.map((d) => {
+    const tempData = { ...d };
+
+    let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
+
+    // @ts-ignore
+    tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
+
+    return tempData;
   })
 
   return { friends, total: friends.length }
