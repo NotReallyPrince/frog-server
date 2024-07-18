@@ -44,7 +44,7 @@ router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
   getUserDetailsById(userId).then((user) => {
     const data = {
       points: user?.point?.point,
-      age: user?.createdAt
+      agePoint: user?.age
     }
     return res.status(200).json({data, message: 'Fetched successfully'})
   }).catch(err => {
