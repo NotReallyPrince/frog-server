@@ -1,5 +1,5 @@
 import { Telegraf, Markup } from 'telegraf';
-import { CreateUser, createUserHelper } from '../helper/user.helper';
+import { CreateUser, createUserHelper, myFriendsList } from '../helper/user.helper';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -36,6 +36,11 @@ share this link to invite your friends: https://t.me/giraffe_testbot?start=${ctx
         )
       ]),
   )
+})
+
+bot.command('friends', async ctx => {
+  const list = await myFriendsList(ctx.from.id);
+  ctx.reply(JSON.stringify(list))
 })
 
 export default bot;
