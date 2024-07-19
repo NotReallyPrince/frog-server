@@ -236,7 +236,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
 export const getUserDetailsById = async (id):Promise<any> => {
   const usersCount:number = await prismaService.user.count();
   const user:any = await prismaService.user.findFirst({ 
-    where: { tgId: Number(id) },
+    where: { id: id },
     include: {
       point: {
         select: {

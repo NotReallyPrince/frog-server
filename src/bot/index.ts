@@ -26,9 +26,9 @@ bot.command('start',async ctx => {
   
 
   ctx.reply(
-    `Hy ${user.firstName}, Welcome to frog community 🐸`,
+    `Hy ${user.firstName}, Welcome to Apes community 🦧`,
       Markup.inlineKeyboard([
-        Markup.button.webApp("Lets Jump 🐸!", 'https://frog-client.netlify.app/'),
+        Markup.button.webApp("Lets Climb 🦧!", 'https://frog-client.netlify.app/'),
         Markup.button.url(
           "Share", 
           `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
