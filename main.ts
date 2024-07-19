@@ -8,7 +8,7 @@ import cors from 'cors'
 const app: Express = express()
 const PORT = process.env.PORT || 5200
 const corsOptions = {
-  origin: 'https://api.apescommunity.com',
+  origin: 'https://frog-client.netlify.app',
   credentials: true,
 };
 
