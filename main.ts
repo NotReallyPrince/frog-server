@@ -23,7 +23,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 
-
 //Routes
 app.use('/user',userRoute);
 
