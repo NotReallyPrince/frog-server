@@ -147,6 +147,7 @@ const creationDates = [
 ];
 
 function calculateYearsAgo(month, year) {
+  if(month == 0 || year == 0) return 1
   // Get the current date
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();

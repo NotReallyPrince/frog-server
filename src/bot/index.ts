@@ -1,45 +1,52 @@
 import { Telegraf, Markup } from 'telegraf';
 import { CreateUser, createUserHelper, myFriendsList } from '../helper/user.helper';
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+let bot = null;
 
-bot.command('start',async ctx => {
-  const referalId = ctx.text.split(' ')[1]
+try{
+  bot = new Telegraf(process.env.BOT_TOKEN);
 
-  const userDetails:CreateUser ={
-    id: ctx.from.id,
-    firstName: ctx.from?.first_name,
-    lastName: ctx.from?.last_name,
-    userName:  ctx.from?.username,
-    isPremium: ctx.from.is_premium
-  }
+  bot.command('start',async ctx => {
+    const referalId = ctx.text.split(' ')[1]
 
-  if(referalId)
-    userDetails.referedBy = parseInt(referalId)
+    const userDetails:CreateUser ={
+      id: ctx.from.id,
+      firstName: ctx.from?.first_name,
+      lastName: ctx.from?.last_name,
+      userName:  ctx.from?.username,
+      isPremium: ctx.from.is_premium
+    }
 
-  const user: any = await createUserHelper(userDetails)
+    if(referalId)
+      userDetails.referedBy = parseInt(referalId)
+
+    const user: any = await createUserHelper(userDetails)
+
+    // console.log(user);
+
+    const inviteUrl = `https://t.me/theOGapes_bot?start=${ctx.from.id}`
+    const text = 'Invite Your friends'
+
+
+    ctx.reply(
+      `Hy ${user.firstName}, Welcome to Apes community 🦧`,
+        Markup.inlineKeyboard([
+          Markup.button.webApp("Lets Climb 🦧!", 'https://frog-client.netlify.app/'),
+          Markup.button.url(
+            "Share", 
+            `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
+          )
+        ]),
+    )
+  })
+
+  bot.command('friends', async ctx => {
+    const list = await myFriendsList(ctx.from.id);
+    ctx.reply(JSON.stringify(list))
+  })
+
+}catch(error){
+  console.log('ERROR HERE:',error);
   
-  // console.log(user);
-
-  const inviteUrl = `https://t.me/theOGapes_bot?start=${ctx.from.id}`
-  const text = 'Invite Your friends'
-  
-
-  ctx.reply(
-    `Hy ${user.firstName}, Welcome to Apes community 🦧`,
-      Markup.inlineKeyboard([
-        Markup.button.webApp("Lets Climb 🦧!", 'https://frog-client.netlify.app/'),
-        Markup.button.url(
-          "Share", 
-          `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
-        )
-      ]),
-  )
-})
-
-bot.command('friends', async ctx => {
-  const list = await myFriendsList(ctx.from.id);
-  ctx.reply(JSON.stringify(list))
-})
-
+}
 export default bot;
