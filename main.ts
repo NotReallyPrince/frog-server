@@ -8,7 +8,7 @@ import cors from 'cors'
 const app: Express = express()
 const PORT = process.env.PORT || 5200
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://api.apescommunity.com',
   credentials: true,
 };
 
@@ -21,7 +21,6 @@ app.use(bodyParser.json())
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
-
 
 
 //Routes

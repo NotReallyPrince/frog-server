@@ -21,14 +21,12 @@ bot.command('start',async ctx => {
   
   // console.log(user);
 
-  const inviteUrl = `https://t.me/giraffe_testbot?start=${ctx.from.id}`
+  const inviteUrl = `https://t.me/theOGapes_bot?start=${ctx.from.id}`
   const text = 'Invite Your friends'
   
 
   ctx.reply(
-    `Hy ${user.firstName}, Welcome to frog community 🐸
-${user.referedBy?`You are refered by ${user.referedBy.firstName}`:''}
-share this link to invite your friends: https://t.me/giraffe_testbot?start=${ctx.from.id}`,
+    `Hy ${user.firstName}, Welcome to frog community 🐸`,
       Markup.inlineKeyboard([
         Markup.button.webApp("Lets Jump 🐸!", 'https://frog-client.netlify.app/'),
         Markup.button.url(

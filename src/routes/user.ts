@@ -6,7 +6,7 @@ const router = Router();
 router.post('/init', (req:Request, res:Response) => {
   const data:CreateUser = req.body;
   
-  createUserHelper(data).then((user) => {
+  createUserHelper(data).then((user) => { 
     res.status(200).json(user);
   }).catch((e) => {
     console.log(e);
@@ -42,7 +42,7 @@ router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
   }
 
   getUserDetailsById(userId).then((user) => {
-    const data = {
+    const data = {  
       points: user?.point?.point,
       agePoint: user?.age
     }
