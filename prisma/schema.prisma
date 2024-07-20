@@ -24,6 +24,7 @@ model User {
   isChannelMember Boolean?  @default(false)
   referels        Referal[] @relation("user")
   referedBy       Referal[] @relation("by")
+  isTwitter       Boolean?  @default(false)
   point           Points?
 }
 

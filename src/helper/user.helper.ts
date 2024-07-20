@@ -388,6 +388,36 @@ export const myFriendsList = async (tgId:number) => {
 }
 
 
+export const telegramMemberCheck = async (tgId)=>{
+
+  const user = await getUserDetailsByTgId(tgId);
+
+  if(user.isTwitter)
+    return 'Already redeemed'
+
+
+    await prismaService.points.update({
+      where: { userId: user.id },
+      data: { 
+        point: {
+          increment: 500
+        }
+       }
+    })
+
+   await prismaService.user.update({
+      where: { id: user.id },
+      data: { isTwitter: true },
+      include: {
+        point: {
+          select: {
+            point: true
+          }
+        }
+      }
+    })
+    return 'point updated'
+}
 
 const channelMemberCheck = async (user:User) => {
   if(user.isChannelMember)
@@ -404,7 +434,7 @@ const channelMemberCheck = async (user:User) => {
       where: { userId: user.id },
       data: { 
         point: {
-          increment: 400
+          increment: 500
         }
        }
     })
