@@ -40,16 +40,16 @@ try{
     )
   })
 
-  bot.command('friends', async ctx => {
-    const list = await myFriendsList(ctx.from.id);
-    ctx.reply(JSON.stringify(list))
-  })
+  // bot.command('friends', async ctx => {
+  //   const list = await myFriendsList(ctx.from.id);
+  //   ctx.reply(JSON.stringify(list))
+  // })
 
-  bot.command('text', async ctx => {
-    const { status } = await bot.telegram.getChatMember('-1002190136201',ctx.from.id);
-    console.log(status);
+  // bot.command('text', async ctx => {
+  //   const { status } = await bot.telegram.getChatMember('@giraff_bot_coomuni',ctx.from.id);
+  //   console.log(status);
     
-  })
+  // })
 
 
 

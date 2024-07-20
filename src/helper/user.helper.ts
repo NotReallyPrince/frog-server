@@ -390,7 +390,7 @@ const channelMemberCheck = async (user:User) => {
   if(user.isChannelMember)
     return user
 
-  const { status } = await bot.telegram.getChatMember(`-100${process.env.CHANNEL_ID}`,user.tgId);
+  const { status } = await bot.telegram.getChatMember(process.env.CHANNEL_ID,user.tgId);
 
   if(
     status == 'administrator' ||
