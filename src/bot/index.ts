@@ -1,7 +1,7 @@
 import { Telegraf, Markup } from 'telegraf';
 import { CreateUser, createUserHelper, myFriendsList } from '../helper/user.helper';
 
-let bot = null;
+let bot: Telegraf;
 
 try{
   bot = new Telegraf(process.env.BOT_TOKEN);
@@ -24,7 +24,7 @@ try{
 
     // console.log(user);
 
-    const inviteUrl = `https://t.me/theOGapes_bot?start=${ctx.from.id}`
+    const inviteUrl = `https://t.me/${process.env.BOT_USERNAME}?start=${ctx.from.id}`
     const text = 'Invite Your friends'
 
 
@@ -44,6 +44,14 @@ try{
     const list = await myFriendsList(ctx.from.id);
     ctx.reply(JSON.stringify(list))
   })
+
+  bot.command('text', async ctx => {
+    const { status } = await bot.telegram.getChatMember('-1002190136201',ctx.from.id);
+    console.log(status);
+    
+  })
+
+
 
 }catch(error){
   console.log('ERROR HERE:',error);

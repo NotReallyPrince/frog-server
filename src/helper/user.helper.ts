@@ -1,5 +1,6 @@
 import { PrismaClient, User } from '@prisma/client'
 import { generatePointsOnRegister } from '../utils/generatePointsOnRegister';
+import bot from '../bot';
 
 const prismaService = new PrismaClient()
 
@@ -173,8 +174,9 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
   const isUser = await prismaService.user.findFirst({ where: { tgId: createUserData.id } });
 
   
-  if(isUser)
-    return getUserDetailsById(isUser.id);
+  if(isUser) {
+    return channelMemberCheck(isUser);
+  }
   
   const index = creationDates.findIndex(d => d.startId >= createUserData.id);
   const dateData = creationDates[index];
@@ -368,19 +370,58 @@ export const myFriendsList = async (tgId:number) => {
       }
     }
   })
+  // const data = friends.map((d) => {
+  //   const tempData = { ...d };
 
-  const data = friends.map((d) => {
-    const tempData = { ...d };
+  //   let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
 
-    let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
+  //   // @ts-ignore
+  //   tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
 
-    // @ts-ignore
-    tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
-
-    return tempData;
-  })
+  //   return tempData;
+  // })
 
   return { friends, total: friends.length }
 }
 
 
+
+const channelMemberCheck = async (user:User) => {
+  if(user.isChannelMember)
+    return user
+
+  const { status } = await bot.telegram.getChatMember(`-100${process.env.CHANNEL_ID}`,user.tgId);
+
+  if(
+    status == 'administrator' ||
+    status == 'creator' ||
+    status == 'member'
+  ) {
+    await prismaService.points.update({
+      where: { userId: user.id },
+      data: { 
+        point: {
+          increment: 400
+        }
+       }
+    })
+
+    const userData = await prismaService.user.update({
+      where: { id: user.id },
+      data: { isChannelMember: true },
+      include: {
+        point: {
+          select: {
+            point: true
+          }
+        }
+      }
+    })
+
+    return userData;
+
+  }
+
+  return user
+
+}
