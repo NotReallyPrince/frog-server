@@ -351,7 +351,7 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
 export const myFriendsList = async (tgId:number) => {
   const user = await getUserDetailsByTgId(tgId);
   if(user) {
-    return channelMemberCheck(user);
+     channelMemberCheck(user);
   }
   const userCount:number = await prismaService.user.count()
   const friends = await prismaService.referal.findMany({
