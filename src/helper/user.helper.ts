@@ -309,7 +309,7 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
     }
   })
 
-  user.apeInclude = user?.userName?.includes('ape') ? 500 : 0
+  user.apeInclude = user?.userName?.toLowerCase().includes('ape') ? 500 : 0
   user.age = age;
 
   if(referedBy)
