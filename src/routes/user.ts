@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { CreateUser, createUserHelper, getLeadershipBoard, getUserDetailsById, getUserDetailsByTgId, myFriendsList } from '../helper/user.helper';
+import { CreateUser, createUserHelper, getLeadershipBoard, getUserDetailsById, getUserDetailsByTgId, myFriendsList, telegramMemberCheck } from '../helper/user.helper';
 
 const router = Router();
 
@@ -43,6 +43,7 @@ router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
 
   getUserDetailsByTgId(userId).then((user) => {
     const data = {
+      ...user,
       points: user?.point?.point,
       agePoint: user?.age,
       apeInclude: user?.apeInclude
@@ -96,5 +97,20 @@ router.get('/myfriends/:id', (req: Request, res: Response) => {
     res.status(500).json({ err, message: "User details fetching failed" })
   })
 })
+
+router.get('/telegram/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if(!id){
+    return res.status(400).json({ message: "User ID is required" })
+  }
+
+  telegramMemberCheck(parseInt(id)).then((data) => {
+    return res.status(200).json({data, message: 'Fetched successfully'})
+  }).catch(err => {
+    res.status(500).json({ err, message: "User details fetching failed" })
+  })
+})
+
 
 export default router

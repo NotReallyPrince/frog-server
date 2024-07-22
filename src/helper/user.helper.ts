@@ -1,5 +1,6 @@
 import { PrismaClient, User } from '@prisma/client'
 import { generatePointsOnRegister } from '../utils/generatePointsOnRegister';
+import bot from '../bot';
 
 const prismaService = new PrismaClient()
 
@@ -170,11 +171,12 @@ function calculateYearsAgo(month, year) {
 
 export const createUserHelper = async (createUserData: CreateUser):Promise<any> => {
   
-  // const isUser = await prismaService.user.findFirst({ where: { tgId: createUserData.id } });
+  const isUser = await prismaService.user.findFirst({ where: { tgId: createUserData.id } });
 
   
-  // if(isUser)
-  //   return getUserDetailsById(isUser.id);
+  if(isUser) {
+    return channelMemberCheck(isUser);
+  }
   
   const index = creationDates.findIndex(d => d.startId >= createUserData.id);
   const dateData = creationDates[index];
@@ -354,6 +356,9 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
 
 export const myFriendsList = async (tgId:number) => {
   const user = await getUserDetailsByTgId(tgId);
+  if(user) {
+     channelMemberCheck(user);
+  }
   const userCount:number = await prismaService.user.count()
   const friends = await prismaService.referal.findMany({
     where: { referedById: user.id },
@@ -374,7 +379,6 @@ export const myFriendsList = async (tgId:number) => {
       }
     }
   })
-
   const data = friends.map((d) => {
     const tempData = { ...d };
 
@@ -390,3 +394,73 @@ export const myFriendsList = async (tgId:number) => {
 }
 
 
+export const telegramMemberCheck = async (tgId)=>{
+
+  const user = await getUserDetailsByTgId(tgId);
+
+  if(user.isTwitter)
+    return 'Already redeemed'
+
+
+    await prismaService.points.update({
+      where: { userId: user.id },
+      data: { 
+        point: {
+          increment: 500
+        }
+       }
+    })
+
+   await prismaService.user.update({
+      where: { id: user.id },
+      data: { isTwitter: true },
+      include: {
+        point: {
+          select: {
+            point: true
+          }
+        }
+      }
+    })
+    return 'point updated'
+}
+
+const channelMemberCheck = async (user:User) => {
+  if(user.isChannelMember)
+    return user
+
+  const { status } = await bot.telegram.getChatMember(process.env.CHANNEL_ID,user.tgId);
+
+  if(
+    status == 'administrator' ||
+    status == 'creator' ||
+    status == 'member'
+  ) {
+    await prismaService.points.update({
+      where: { userId: user.id },
+      data: { 
+        point: {
+          increment: 500
+        }
+       }
+    })
+
+    const userData = await prismaService.user.update({
+      where: { id: user.id },
+      data: { isChannelMember: true },
+      include: {
+        point: {
+          select: {
+            point: true
+          }
+        }
+      }
+    })
+
+    return userData;
+
+  }
+
+  return user
+
+}
