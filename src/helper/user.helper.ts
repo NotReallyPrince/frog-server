@@ -170,11 +170,11 @@ function calculateYearsAgo(month, year) {
 
 export const createUserHelper = async (createUserData: CreateUser):Promise<any> => {
   
-  const isUser = await prismaService.user.findFirst({ where: { tgId: createUserData.id } });
+  // const isUser = await prismaService.user.findFirst({ where: { tgId: createUserData.id } });
 
   
-  if(isUser)
-    return getUserDetailsById(isUser.id);
+  // if(isUser)
+  //   return getUserDetailsById(isUser.id);
   
   const index = creationDates.findIndex(d => d.startId >= createUserData.id);
   const dateData = creationDates[index];
@@ -198,6 +198,11 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
 
   if(createUserData.isPremium)
       generatedPoints += 1000;
+
+  if(createUserData?.userName?.includes('ape')){
+    generatedPoints += 500
+  }
+  
 
   await prismaService.points.create(({
     data: {
@@ -302,6 +307,7 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
     }
   })
 
+  user.apeInclude = user?.userName?.includes('ape') ? 500 : 0
   user.age = age;
 
   if(referedBy)
