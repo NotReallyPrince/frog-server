@@ -9,7 +9,7 @@ try{
   bot.command('start',async ctx => {
     const referalId = ctx.text.split(' ')[1]
 
-    const userDetails:CreateUser ={
+    const userDetails:CreateUser = {
       id: ctx.from.id,
       firstName: ctx.from?.first_name,
       lastName: ctx.from?.last_name,
@@ -24,7 +24,7 @@ try{
 
     // console.log(user);
 
-    const inviteUrl = `https://t.me/${process.env.BOT_USERNAME}?start=${ctx.from.id}`
+    const inviteUrl = `https://t.me/${process.env.BOT_USERNAME.replace('@','')}?start=${ctx.from.id}`
     const text = 'Invite Your friends'
 
 
