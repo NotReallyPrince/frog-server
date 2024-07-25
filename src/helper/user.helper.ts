@@ -337,11 +337,9 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
     prismaService.user.findMany({
       skip: skip,
       take: pageSize,
-      // orderBy: {
-      //   point: {
-      //     point: 'desc',
-      //   },
-      // },
+      orderBy: {
+        points: 'desc'
+      },
       select: {
         firstName: true,
         lastName: true,
