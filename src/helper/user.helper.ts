@@ -389,16 +389,16 @@ export const myFriendsList = async (tgId:number) => {
       }
     }
   })
-  // const data = friends.map((d) => {
-  //   const tempData = { ...d };
+  const data = friends.map((d) => {
+    const tempData = { ...d };
+    console.log(d,"USER")
+    let generatedPoints: number = generatePointsOnRegister(parseInt(d?.user.createdAt), userCount);
 
-  //   let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
+    // @ts-ignore
+    tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
 
-  //   // @ts-ignore
-  //   tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
-
-  //   return tempData;
-  // })
+    return tempData;
+  })
 
   return { friends, total: friends.length }
 }
