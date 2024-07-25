@@ -180,7 +180,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
   
   const index = creationDates.findIndex(d => d.startId >= createUserData.id);
   const dateData = creationDates[index];
-  const years = calculateYearsAgo(dateData?.m || 0, dateData?.y || 1)
+  const years = calculateYearsAgo(dateData?.m || 0, dateData?.y || 1) || 1
 
 
   const user = await prismaService.user.create({
