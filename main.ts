@@ -8,7 +8,7 @@ import cors from 'cors'
 const app: Express = express()
 const PORT = process.env.PORT || 5200
 const corsOptions = {
-  origin: ['http://localhost:5174', 'https://frog-frontend.vercel.app'],
+  origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app'],
   credentials: true,
 };
 
