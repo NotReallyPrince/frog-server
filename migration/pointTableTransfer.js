@@ -1,7 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb')
 
 const main = async () => {
-  const client = new MongoClient('mongodb+srv://amshen:amshen123@cluster0.tkbajim.mongodb.net/');
+  const client = new MongoClient('');
   const db = client.db('Frog');
 
   const users = await db.collection('User').find({}).toArray()
