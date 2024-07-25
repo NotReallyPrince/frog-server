@@ -182,18 +182,6 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
   const dateData = creationDates[index];
   const years = calculateYearsAgo(dateData?.m || 0, dateData?.y || 1) || 1
 
-
-  const user = await prismaService.user.create({
-    data: {
-      tgId: createUserData.id,
-      firstName: createUserData.firstName,
-      lastName: createUserData.lastName,
-      userName: createUserData.userName,
-      isPremium: createUserData?.premium,
-      createdAt: Math.round(years)+''
-    }
-  })
-
   const userCount:number = await prismaService.user.count()
 
   let generatedPoints:number = generatePointsOnRegister(Math.round(years), userCount);
@@ -204,37 +192,63 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
   if(createUserData?.userName?.includes('ape')){
     generatedPoints += 500
   }
+
+  const user = await prismaService.user.create({
+    data: {
+      tgId: createUserData.id,
+      firstName: createUserData.firstName,
+      lastName: createUserData.lastName,
+      userName: createUserData.userName,
+      isPremium: createUserData?.premium,
+      createdAt: Math.round(years)+'',
+      points: generatedPoints
+    }
+  })
+
   
 
-  await prismaService.points.create(({
-    data: {
-      userId: user.id,
-      point: generatedPoints
-    }
-  }))
+  // await prismaService.points.create(({
+  //   data: {
+  //     userId: user.id,
+  //     point: generatedPoints
+  //   }
+  // }))
 
   if(createUserData.referedBy) {
     const referedUser = await prismaService.user.findFirst(({ where: { tgId: createUserData.referedBy } }))
 
-    if(referedUser)
-    await prismaService.referal.create({
-      data: {
-        referedById: referedUser.id,
-        userId: user.id
-      }
-    })
+    if(!referedUser) 
+      return getUserDetailsById(user.id);
+
+    await Promise.all([
+      prismaService.referal.create({
+        data: {
+          referedById: referedUser.id,
+          userId: user.id
+        }
+      }),
+      prismaService.user.update({
+        where: { id: referedUser.id },
+        data: {
+          points: {
+            increment: Math.round(generatedPoints * (20 / 100)), // Adjust the increment value as needed
+          }
+        }
+      })
+    ])
 
     // Update the points for the referred user
-    await prismaService.points.update({
-      where: {
-        userId: referedUser.id,
-      },
-      data: {
-        point: {
-          increment: Math.round(generatedPoints * (20 / 100)), // Adjust the increment value as needed
-        },
-      },
-    });
+
+    // await prismaService.points.update({
+    //   where: {
+    //     userId: referedUser.id,
+    //   },
+    //   data: {
+    //     point: {
+    //       increment: Math.round(generatedPoints * (20 / 100)), // Adjust the increment value as needed
+    //     },
+    //   },
+    // });
   }
 
   return getUserDetailsById(user.id);
@@ -245,13 +259,13 @@ export const getUserDetailsById = async (id):Promise<any> => {
   const usersCount:number = await prismaService.user.count();
   const user:any = await prismaService.user.findFirst({ 
     where: { id: id },
-    include: {
-      point: {
-        select: {
-          point: true
-        }
-      }
-    }
+    // include: {
+    //   point: {
+    //     select: {
+    //       point: true
+    //     }
+    //   }
+    // }
   })
 
   const age = generatePointsOnRegister(parseInt(user.createdAt), usersCount)
@@ -284,13 +298,6 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
   const usersCount:number = await prismaService.user.count();
   const user:any = await prismaService.user.findFirst({ 
     where: { tgId: Number(id) },
-    include: {
-      point: {
-        select: {
-          point: true
-        }
-      }
-    }
   })
 
   const age = generatePointsOnRegister(parseInt(user.createdAt), usersCount)
@@ -324,29 +331,33 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
   const skip = (page - 1) * pageSize;
 
   // Get the total count of users
-  const totalCount = await prismaService.user.count();
+  // const totalCount = await prismaService.user.count();
+  const [totalCount, users] = await Promise.all([
+    prismaService.user.count(),
+    prismaService.user.findMany({
+      skip: skip,
+      take: pageSize,
+      // orderBy: {
+      //   point: {
+      //     point: 'desc',
+      //   },
+      // },
+      select: {
+        firstName: true,
+        lastName: true,
+        userName: true,
+        tgId:true,
+        points: true
+        // point: {
+        //   select: {
+        //     point: true,
+        //   },
+        // },
+      },
+    })
+  ]) 
 
   // Get paginated, sorted users with selected fields
-  const users = await prismaService.user.findMany({
-    skip: skip,
-    take: pageSize,
-    orderBy: {
-      point: {
-        point: 'desc',
-      },
-    },
-    select: {
-      firstName: true,
-      lastName: true,
-      userName: true,
-      tgId:true,
-      point: {
-        select: {
-          point: true,
-        },
-      },
-    },
-  });
 
   return {
     totalCount,
@@ -370,25 +381,26 @@ export const myFriendsList = async (tgId:number) => {
           tgId: true,
           userName: true,
           createdAt: true,
-          point: {
-            select: {
-              point: true
-            }
-          }
+          points: true
+          // point: {
+          //   select: {
+          //     point: true
+          //   }
+          // }
         }
       }
     }
   })
-  const data = friends.map((d) => {
-    const tempData = { ...d };
+  // const data = friends.map((d) => {
+  //   const tempData = { ...d };
 
-    let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
+  //   let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
 
-    // @ts-ignore
-    tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
+  //   // @ts-ignore
+  //   tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
 
-    return tempData;
-  })
+  //   return tempData;
+  // })
 
   return { friends, total: friends.length }
 }
@@ -402,25 +414,21 @@ export const telegramMemberCheck = async (tgId)=>{
     return 'Already redeemed'
 
 
-    await prismaService.points.update({
-      where: { userId: user.id },
-      data: { 
-        point: {
-          increment: 500
-        }
-       }
-    })
+    // await prismaService.points.update({
+    //   where: { userId: user.id },
+    //   data: { 
+    //     point: {
+    //       increment: 500
+    //     }
+    //    }
+    // })
 
    await prismaService.user.update({
       where: { id: user.id },
-      data: { isTwitter: true },
-      include: {
-        point: {
-          select: {
-            point: true
-          }
-        }
-      }
+      data: { 
+        isTwitter: true,
+        points: { increment: 500 }
+      },
     })
     return 'point updated'
 }
@@ -436,25 +444,22 @@ const channelMemberCheck = async (user:User) => {
     status == 'creator' ||
     status == 'member'
   ) {
-    await prismaService.points.update({
-      where: { userId: user.id },
-      data: { 
-        point: {
-          increment: 500
-        }
-       }
-    })
+
+    // await prismaService.points.update({
+    //   where: { userId: user.id },
+    //   data: { 
+    //     point: {
+    //       increment: 500
+    //     }
+    //    }
+    // })
 
     const userData = await prismaService.user.update({
       where: { id: user.id },
-      data: { isChannelMember: true },
-      include: {
-        point: {
-          select: {
-            point: true
-          }
-        }
-      }
+      data: { 
+        isChannelMember: true,
+        points: { increment: 500 }
+      },
     })
 
     return userData;
