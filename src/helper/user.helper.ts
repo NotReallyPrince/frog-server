@@ -363,6 +363,14 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
   };
 };
 
+export const getMyPositionInLeaderBoard = async (tgId:number) => {
+  const list = await prismaService.user.findMany({ orderBy: { points: 'desc' } });
+  const index = list.findIndex(d => d.tgId === tgId);
+
+  return { position: index+1 }
+
+}
+
 export const myFriendsList = async (tgId:number) => {
   const user = await getUserDetailsByTgId(tgId);
   if(user) {
