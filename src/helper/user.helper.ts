@@ -367,7 +367,7 @@ export const getMyPositionInLeaderBoard = async (tgId:number) => {
   const list = await prismaService.user.findMany({ orderBy: { points: 'desc' } });
   const index = list.findIndex(d => d.tgId === tgId);
 
-  return { position: index+1 }
+  return { position: index+1,...list }
 
 }
 
