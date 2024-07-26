@@ -363,13 +363,40 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
   };
 };
 
-export const getMyPositionInLeaderBoard = async (tgId:number) => {
-  const list = await prismaService.user.findMany({ orderBy: { points: 'desc' } });
+export const getMyPositionInLeaderBoard = async (tgId: number) => {
+  // Fetch the users sorted by points in descending order
+  const list = await prismaService.user.findMany({
+    select: {
+      tgId: true,
+      firstName: true,    // Include the 'name' field
+      points: true   // Include the 'points' field
+    },
+    orderBy: {
+      points: 'desc'
+    }
+  });
+
+  // Find the user's index and details by tgId
+  const user = list.find(d => d.tgId === tgId);
   const index = list.findIndex(d => d.tgId === tgId);
 
-  return { position: index+1 }
+  // Check if the user was found in the leaderboard
+  if (user === undefined || index === -1) {
+    return {
+      position: null, // or handle the case if user is not found
+      name: null,
+      points: null
+    };
+  }
 
+  // Return the user's position, name, and points
+  return {
+    position: index + 1,
+    name: user.firstName,
+    points: user.points
+  };
 }
+
 
 export const myFriendsList = async (tgId:number) => {
   const user = await getUserDetailsByTgId(tgId);
