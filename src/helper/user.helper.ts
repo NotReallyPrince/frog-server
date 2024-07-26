@@ -316,7 +316,7 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
     }
   })
 
-  user.apeInclude = user?.userName?.toLowerCase().includes('ape') ? 500 : 0
+  user.apeInclude = user?.userName?.toLowerCase().includes('ape') ? 2500 : 0
   user.age = age;
 
   if(referedBy)
@@ -460,7 +460,7 @@ export const telegramMemberCheck = async (tgId)=>{
       where: { id: user.id },
       data: { 
         isTwitter: true,
-        points: { increment: 500 }
+        points: { increment: 1000 }
       },
     })
     return 'point updated'
@@ -491,7 +491,7 @@ const channelMemberCheck = async (user:User) => {
       where: { id: user.id },
       data: { 
         isChannelMember: true,
-        points: { increment: 500 }
+        points: { increment: 1000 }
       },
     })
 
