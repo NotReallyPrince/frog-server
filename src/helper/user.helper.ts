@@ -190,7 +190,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
       generatedPoints += 1000;
 
   if(createUserData?.userName?.includes('ape')){
-    generatedPoints += 500
+    generatedPoints += 1000
   }
 
   const user = await prismaService.user.create({
@@ -316,7 +316,7 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
     }
   })
 
-  user.apeInclude = user?.userName?.toLowerCase().includes('ape') ? 500 : 0
+  user.apeInclude = user?.userName?.toLowerCase().includes('ape') ? 1000 : 0
   user.age = age;
 
   if(referedBy)
@@ -381,6 +381,41 @@ export const getLeadershipBoard = async (page: number, pageSize: number, userId:
   };
 };
 
+export const getMyPositionInLeaderBoard = async (tgId: number) => {
+  // Fetch the users sorted by points in descending order
+  const list = await prismaService.user.findMany({
+    select: {
+      tgId: true,
+      firstName: true,    // Include the 'name' field
+      points: true   // Include the 'points' field
+    },
+    orderBy: {
+      points: 'desc'
+    }
+  });
+
+  // Find the user's index and details by tgId
+  const user = list.find(d => d.tgId === tgId);
+  const index = list.findIndex(d => d.tgId === tgId);
+
+  // Check if the user was found in the leaderboard
+  if (user === undefined || index === -1) {
+    return {
+      position: null, // or handle the case if user is not found
+      name: null,
+      points: null
+    };
+  }
+
+  // Return the user's position, name, and points
+  return {
+    position: index + 1,
+    name: user.firstName,
+    points: user.points
+  };
+}
+
+
 export const myFriendsList = async (tgId:number) => {
   const user = await getUserDetailsByTgId(tgId);
   if(user) {
@@ -407,16 +442,16 @@ export const myFriendsList = async (tgId:number) => {
       }
     }
   })
-  // const data = friends.map((d) => {
-  //   const tempData = { ...d };
+  const data = friends.map((d) => {
+    const tempData = { ...d };
+    console.log(d,"USER")
+    let generatedPoints: number = generatePointsOnRegister(parseInt(d?.user.createdAt), userCount);
 
-  //   let generatedPoints: number = generatePointsOnRegister(parseInt(d.user.createdAt), userCount);
+    // @ts-ignore
+    tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
 
-  //   // @ts-ignore
-  //   tempData.user.pointGain = Math.round(generatedPoints * (20 / 100));
-
-  //   return tempData;
-  // })
+    return tempData;
+  })
 
   return { friends, total: friends.length }
 }

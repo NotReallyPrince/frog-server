@@ -22,7 +22,8 @@ try{
 
     const user: any = await createUserHelper(userDetails)
 
-    // console.log(user);
+    console.log(user);
+    console.log(ctx.from)
 
     const inviteUrl = `https://t.me/${process.env.BOT_USERNAME.replace('@','')}?start=${ctx.from.id}`
     const text = 'Invite Your friends'
@@ -38,6 +39,7 @@ try{
           )
         ]),
     )
+
   })
 
   // bot.command('friends', async ctx => {
