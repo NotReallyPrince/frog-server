@@ -22,22 +22,24 @@ try{
 
     const user: any = await createUserHelper(userDetails)
 
-    // console.log(user);
+    console.log(user);
+    console.log(ctx.from)
 
     const inviteUrl = `https://t.me/${process.env.BOT_USERNAME.replace('@','')}?start=${ctx.from.id}`
     const text = 'Invite Your friends'
 
 
-    ctx.reply(
-      `Hy ${user.firstName}, Welcome to Apes community 🦧`,
-        Markup.inlineKeyboard([
-          Markup.button.webApp("Lets Climb 🦧!", 'https://frog-frontend.vercel.app/'),
-          Markup.button.url(
-            "Share", 
-            `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
-          )
-        ]),
-    )
+    // ctx.reply(
+    //   `Hy ${user.firstName}, Welcome to Apes community 🦧`,
+    //     Markup.inlineKeyboard([
+    //       Markup.button.webApp("Lets Climb 🦧!", 'https://frog-frontend.vercel.app/'),
+    //       Markup.button.url(
+    //         "Share", 
+    //         `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
+    //       )
+    //     ]),
+    // )
+
   })
 
   // bot.command('friends', async ctx => {
