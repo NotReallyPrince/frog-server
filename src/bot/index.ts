@@ -29,16 +29,16 @@ try{
     const text = 'Invite Your friends'
 
 
-    // ctx.reply(
-    //   `Hy ${user.firstName}, Welcome to Apes community 🦧`,
-    //     Markup.inlineKeyboard([
-    //       Markup.button.webApp("Lets Climb 🦧!", 'https://frog-frontend.vercel.app/'),
-    //       Markup.button.url(
-    //         "Share", 
-    //         `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
-    //       )
-    //     ]),
-    // )
+    ctx.reply(
+      `Hy ${user.firstName}, Welcome to Apes community 🦧`,
+        Markup.inlineKeyboard([
+          Markup.button.webApp("Lets Climb 🦧!", 'https://frog-frontend.vercel.app/'),
+          Markup.button.url(
+            "Share", 
+            `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`
+          )
+        ]),
+    )
 
   })
 
