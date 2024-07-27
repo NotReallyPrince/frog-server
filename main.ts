@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import { rateLimit } from 'express-rate-limit'
 import { connectDatabase } from './src/config/databaseConnection';
+import bot from './src/bot';
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -36,7 +37,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use('/user',userRoute);
 
 app.listen(PORT,async () => {
-  // bot.launch();
+  bot.launch();
   await connectDatabase()
   console.log('Server Started');
 })
