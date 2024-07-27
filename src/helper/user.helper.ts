@@ -190,7 +190,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
       generatedPoints += 1000;
 
   if(createUserData?.userName?.includes('ape')){
-    generatedPoints += 500
+    generatedPoints += 1000
   }
 
   const user = await prismaService.user.create({
