@@ -5,7 +5,7 @@ import bot from '../bot';
 const prismaService = new PrismaClient()
 
 export type CreateUser = {
-  id: number;
+  id?: number;
   tgId?: number;
   firstName?: string;
   lastName?: string;

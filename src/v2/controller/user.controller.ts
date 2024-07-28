@@ -5,6 +5,7 @@ import { IUserModel, UserModel } from "../../models/user.model"
 import calculateYearsAgo from "../../utils/calculateAccountAge"
 import { generatePointsOnRegister } from "../../utils/generatePointsOnRegister"
 import { channelMemberCheck } from "../helper/user.helper"
+import { PointsModel } from "../../models/points.model"
 
 export type CreateUser = {
     id: number;
@@ -23,7 +24,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
             let user:any = await UserModel.findOne({tgId: data.id})
             
             if(user){
-                return channelMemberCheck(user)
+                resolve(channelMemberCheck(user))
             }
 
             const years:number = calculateYearsAgo(data?.tgId);
@@ -59,7 +60,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
                 }
             ]
            
-            if(data.isPremium){
+            if(data.premium){
                 userPoints.push({
                     userId: user._id,
                     point: pointsData.premium,
@@ -75,8 +76,11 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
                 })
             }
 
+            const pointSaveData = await PointsModel.insertMany(userPoints);
 
-
+            console.log(pointSaveData);
+            
+            resolve(user)
         }catch(err){
             console.error(err)
             reject(err.message)

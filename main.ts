@@ -6,6 +6,7 @@ import { connectDatabase } from './src/config/databaseConnection';
 import bot from './src/bot';
 import dotenv from 'dotenv'
 import { userRoute } from './src/routes';
+import userV2Router from './src/v2/routes/user.routes'
 dotenv.config()
 
 const app: Express = express()
@@ -35,6 +36,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use
 //Routes
 app.use('/user',userRoute);
+app.use('/v2/user', userV2Router)
 
 app.listen(PORT,async () => {
   bot.launch();

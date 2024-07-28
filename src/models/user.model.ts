@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     },
     userName: {
         type: String,
-        required: true
+        required: false
     },
     firstName: {
         type: String,
@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-        required: true
+        required: false
     },
     isPremium: {
         type: Boolean,
