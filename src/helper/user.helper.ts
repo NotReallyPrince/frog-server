@@ -2,10 +2,11 @@ import { PrismaClient, User } from '@prisma/client'
 import { generatePointsOnRegister } from '../utils/generatePointsOnRegister';
 import bot from '../bot';
 
-// const prismaService = new PrismaClient()
+const prismaService = new PrismaClient()
 
 export type CreateUser = {
   id: number;
+  tgId?: number;
   firstName?: string;
   lastName?: string;
   userName?: string;
@@ -489,7 +490,6 @@ const channelMemberCheck = async (user:User) => {
     return user
 
   const { status } = await bot.telegram.getChatMember(process.env.CHANNEL_ID,user.tgId);
-
   if(
     status == 'administrator' ||
     status == 'creator' ||

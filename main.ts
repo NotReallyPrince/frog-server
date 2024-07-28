@@ -1,11 +1,11 @@
 import express, { Express, Request, Response } from 'express';
-import { userRoute } from './src/routes'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import { rateLimit } from 'express-rate-limit'
 import { connectDatabase } from './src/config/databaseConnection';
 import bot from './src/bot';
 import dotenv from 'dotenv'
+import { userRoute } from './src/routes';
 dotenv.config()
 
 const app: Express = express()
@@ -32,7 +32,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-
+app.use
 //Routes
 app.use('/user',userRoute);
 
@@ -41,4 +41,3 @@ app.listen(PORT,async () => {
   await connectDatabase()
   console.log('Server Started');
 })
-

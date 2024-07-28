@@ -32,3 +32,13 @@ const UserSchema = new mongoose.Schema({
 }, {timestamps: true})
 
 export const UserModel = mongoose.model('users',UserSchema)
+export type IUserModel = {
+    _id: string;
+    tgId: string;
+    userName: string;
+    firstName: string;
+    lastName: string;
+    isPremium: string;
+    accountAge: string;
+    referredBy: string;
+}
