@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 const PointsSchema = new mongoose.Schema({
     userId: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        index: true 
     },
     type: {
         type: String,
@@ -11,7 +12,8 @@ const PointsSchema = new mongoose.Schema({
     },
     point: {
         type: String,
-        required: true
+        required: true,
+        index: true 
     }
 }, {timestamps: true})
 
