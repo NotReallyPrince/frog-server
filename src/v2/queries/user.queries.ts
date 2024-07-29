@@ -49,7 +49,7 @@ export const getTopUsersWithPoints = async () => {
   };
 
 
-  
+
   export const getSpecificUserPoints = async (specificUserId) => {
     try{
         const specificUserRank = await PointsModel.aggregate([
@@ -193,7 +193,6 @@ export const getTopUsersWithPoints = async () => {
   };
 
 
-
   export const getTopUsersWithSpecificUserRank = async (specificUserId) => {
     try {
       // Ensure specificUserId is a valid ObjectId
@@ -204,80 +203,78 @@ export const getTopUsersWithPoints = async () => {
       // Convert specificUserId to ObjectId
       const objectId = new mongoose.Types.ObjectId(specificUserId);
   
-      // Aggregate to get top users and specific user's rank
-      const [topUsers, specificUserRank] = await Promise.all([
-        PointsModel.aggregate([
-          {
-            $group: {
-              _id: "$userId",
-              totalPoints: { $sum: { $toDouble: "$points" } } // Convert points to double and sum
-            }
-          },
-          {
-            $sort: { totalPoints: -1 } // Sort users by total points descending
-          },
-          {
-            $limit: 100 // Limit to top 100 users
-          },
-          {
-            $lookup: {
-              from: 'users',
-              localField: '_id',
-              foreignField: '_id',
-              as: 'userDetails'
-            }
-          },
-          { $unwind: "$userDetails" },
-          {
-            $project: {
-              _id: 0,
-              totalPoints: 1,
-              firstName: "$userDetails.firstName"
-            }
+      // Aggregate to get top users
+      const topUsers = await PointsModel.aggregate([
+        {
+          $group: {
+            _id: "$userId",
+            totalPoints: { $sum: { $toDouble: "$points" } } // Convert points to double and sum
           }
-        ]),
-        PointsModel.aggregate([
-          {
-            $group: {
-              _id: "$userId",
-              totalPoints: { $sum: { $toDouble: "$points" } }
-            }
-          },
-          {
-            $sort: { totalPoints: -1 }
-          },
-          {
-            $group: {
-              _id: null,
-              users: { $push: { userId: "$_id", totalPoints: "$totalPoints" } }
-            }
-          },
-          {
-            $unwind: {
-              path: "$users",
-              includeArrayIndex: "rank"
-            }
-          },
-          {
-            $match: {
-              "users.userId": objectId
-            }
-          },
-          {
-            $project: {
-              _id: 0,
-              totalPoints: "$users.totalPoints",
-              rank: { $add: ["$rank", 1] } 
-            }
+        },
+        {
+          $sort: { totalPoints: -1 } // Sort users by total points descending
+        },
+        {
+          $limit: 100 // Limit to top 100 users
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'userDetails'
           }
-        ])
+        },
+        { $unwind: "$userDetails" },
+        {
+          $project: {
+            _id: 0,
+            totalPoints: 1,
+            firstName: "$userDetails.firstName"
+          }
+        }
       ]);
   
-      console.log(specificUserRank,"SPECIF")
+      // Separate query to find the rank of the specific user
+      const specificUserRank = await PointsModel.aggregate([
+        {
+          $group: {
+            _id: "$userId",
+            totalPoints: { $sum: { $toDouble: "$points" } }
+          }
+        },
+        {
+          $sort: { totalPoints: -1 }
+        },
+        {
+          $group: {
+            _id: null,
+            users: { $push: { userId: "$_id", totalPoints: "$totalPoints" } }
+          }
+        },
+        {
+          $unwind: {
+            path: "$users",
+            includeArrayIndex: "rank"
+          }
+        },
+        {
+          $match: {
+            "users.userId": objectId
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            totalPoints: "$users.totalPoints",
+            rank: { $add: ["$rank", 1] }
+          }
+        }
+      ]);
+  
       // Extract specific user's rank
       const specificUser = specificUserRank[0] || { userId: specificUserId, totalPoints: 0, rank: null };
-      // const specificUserName = specificUser ? specificUserDetails[0]?.firstName : null;
-  console.log(specificUserRank,"raNKKK")
+  
       return {
         topUsers,
         specificUser
@@ -287,4 +284,5 @@ export const getTopUsersWithPoints = async () => {
       throw error;
     }
   };
+  
   
