@@ -6,7 +6,7 @@ import calculateYearsAgo from "../../utils/calculateAccountAge"
 import { generatePointsOnRegister } from "../../utils/generatePointsOnRegister"
 import { channelMemberCheck } from "../helper/user.helper"
 import { PointsModel } from "../../models/points.model"
-import { getCurrentUserPointsRank, getSpecificUserPoints, getTopUsersWithPoints, getTopUsersWithSpecificUserRank } from "../queries/user.queries"
+import { getCurrentUserPointsRank, getFriendsDetails, getSpecificUserPoints, getTopUsersWithPoints, getTopUsersWithSpecificUserRank } from "../queries/user.queries"
 
 export type CreateUser = {
     id: number;
@@ -98,6 +98,17 @@ export const leadershipController = (tgId: string) => {
            const result = await getTopUsersWithSpecificUserRank(tgId)
         
             resolve(result);
+        }catch(err){
+            reject(err)
+        }
+    })
+}
+
+export const friendsDetailsPage = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try{
+            const friends = await getFriendsDetails(userId);
+            resolve(friends)
         }catch(err){
             reject(err)
         }

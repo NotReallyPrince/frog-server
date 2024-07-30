@@ -286,3 +286,40 @@ export const getTopUsersWithPoints = async () => {
   };
   
   
+export const getFriendsDetails = async (userId) => {
+  try{
+    console.log(userId);
+    
+    const user = await UserModel.findOne({tgId: userId})
+    
+    const friends = await PointsModel.aggregate([
+      {
+        $match: {
+          userId: user._id,
+          type: 'referral'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          foreignField: '_id',
+          localField: 'referred',
+          as: 'friend'
+        }
+      },
+      {
+        $unwind: "$friend"
+      },
+      {
+        $project: {
+          firstName: "$friend.firstName",
+          points: 1
+        }
+      }
+    ])
+    
+    return friends;
+  }catch(error){
+    return false
+  }
+}
