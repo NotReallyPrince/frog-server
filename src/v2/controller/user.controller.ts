@@ -11,14 +11,13 @@ import {
 } from "../helper/user.helper";
 import { PointsModel } from "../../models/points.model";
 import {
-  getCurrentUserPointsRank,
-  getSpecificUserPoints,
+  getFriendsDetails,
   getTopUsersWithPoints,
   getTopUsersWithSpecificUserRank,
 } from "../queries/user.queries";
 
 export type CreateUser = {
-  id: number;
+  id?: number;
   tgId?: number;
   firstName?: string;
   lastName?: string;
@@ -33,9 +32,9 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
     try {
       let user: any = await UserModel.findOne({ tgId: data.id });
 
-      if (user) {
-        resolve(channelMemberCheck(user));
-      }
+      // if (user) {
+      //   resolve(channelMemberCheck(user));
+      // }
 
       const years: number = calculateYearsAgo(data?.tgId);
       const userCount: number = await UserModel.find({}).countDocuments();
@@ -145,3 +144,15 @@ export const telegramMemberCheckController = (userid: number) => {
     }
   });
 };
+    
+
+export const friendsDetailsPage = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try{
+            const friends = await getFriendsDetails(userId);
+            resolve(friends)
+        }catch(err){
+            reject(err)
+        }
+    })
+}

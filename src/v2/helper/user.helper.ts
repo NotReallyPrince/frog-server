@@ -1,4 +1,4 @@
-import bot from "../../bot";
+import bot from "../bot";
 import { pointsData, pointType } from "../../config/points";
 import { PointsModel } from "../../models/points.model";
 import { IUserModel } from "../../models/user.model";
@@ -24,6 +24,7 @@ export const channelMemberCheck = async (user:IUserModel) => {
         
         return false
     }catch(err){
+      console.log(err)
         return false;
     }
   }

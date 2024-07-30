@@ -1,5 +1,6 @@
 import { IRouter, Request, Response, Router } from "express";
-import { CreateUser, createUserHelper, HomePageUserDetailsController, leadershipController, telegramMemberCheckController } from "../controller/user.controller";
+import { CreateUser, createUserHelper, friendsDetailsPage, HomePageUserDetailsController, leadershipController, telegramMemberCheckController } from "../controller/user.controller";
+
 import { getTopUsersWithPoints } from "../queries/user.queries";
 
 const router: IRouter = Router();
@@ -55,5 +56,14 @@ router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
     })
   })
 
+router.get('/friends/:userId', (req: Request, res: Response) => {
+    const userId:any = req?.params?.userId;
+
+    friendsDetailsPage(userId).then(data => {
+        res.status(200).json({data})
+    }).catch(err => {
+        res.status(501).json({message: 'Something went wrong!'})
+    })
+})
 
 export default router;

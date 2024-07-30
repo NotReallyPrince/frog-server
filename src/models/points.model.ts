@@ -10,6 +10,9 @@ const PointsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    referred: {
+        type: String
+    },
     point: {
         type: String,
         required: true,
