@@ -1,5 +1,6 @@
 import { IRouter, Request, Response, Router } from "express";
-import { CreateUser, createUserHelper, friendsDetailsPage, leadershipController } from "../controller/user.controller";
+import { CreateUser, createUserHelper, friendsDetailsPage, HomePageUserDetailsController, leadershipController, telegramMemberCheckController } from "../controller/user.controller";
+
 import { getTopUsersWithPoints } from "../queries/user.queries";
 
 const router: IRouter = Router();
@@ -23,6 +24,37 @@ router.get('/leadership-board/:userId', (req: Request, res: Response) => {
         res.status(501).json({message: "Internal server error"})
     })
 })
+
+router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
+    const {userId} = req.params;
+  
+    if(!userId){
+      return res.status(400).json({ message: "User ID is required" })
+    }
+  
+    HomePageUserDetailsController(userId).then((user) => {
+    
+      return res.status(200).json({user, message: 'Fetched successfully'})
+    }).catch(err => {
+      console.log(err);
+      
+      res.status(500).json({ err, message: "User details fetching failed" })
+    })
+  })
+
+  router.get('/telegram/:id', (req: Request, res: Response) => {
+    const { id } = req.params;
+  
+    if(!id){
+      return res.status(400).json({ message: "User ID is required" })
+    }
+  
+    telegramMemberCheckController(parseInt(id)).then((data) => {
+      return res.status(200).json({data, message: 'Fetched successfully'})
+    }).catch(err => {
+      res.status(500).json({ err, message: "User details fetching failed" })
+    })
+  })
 
 router.get('/friends/:userId', (req: Request, res: Response) => {
     const userId:any = req?.params?.userId;

@@ -1,6 +1,6 @@
 import { PrismaClient, User } from '@prisma/client'
 import { generatePointsOnRegister } from '../utils/generatePointsOnRegister';
-import bot from '../bot';
+import bot from '../v2/bot';
 
 const prismaService = new PrismaClient()
 
