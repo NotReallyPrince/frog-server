@@ -3,50 +3,100 @@ import { PointsModel } from "../../models/points.model"
 import { UserModel } from "../../models/user.model";
 
 
-export const getTopUsersWithPoints = async () => {
-    try {
-      const topUsers = await PointsModel.aggregate([
-        {
-            $group: {
-                _id: "$userId",
-                totalPoints: {
-                  $sum: "$points"
-                },
-            }
-        },
-        {
-          $sort: { totalPoints: -1 }
-        },
-        {
-          $limit: 100
-        },
-        {
-          $lookup: {
-            from: 'users', // The name of the user collection
-            localField: '_id',
-            foreignField: '_id', // Assuming tgId is the field that matches userId in Points
-            as: 'userDetails'
-          }
-        },
-        {
-          $unwind: "$userDetails"
-        },
-        {
-          $project: {
-            _id: 0,
-            totalPoints: 1,
-            pointsDetails: 1,
-            firstName: '$userDetails.firstName'
+export const getTopUsersWithPoints = async (userid) => {
+  if (!mongoose.Types.ObjectId.isValid(userid)) {
+    throw new Error("Invalid user ID");
+  }
 
+  const userId = new mongoose.Types.ObjectId(userid);
+
+  try {
+    const topUsers = await PointsModel.aggregate([
+      {
+        $match: {
+          userId: userId, // Ensure this matches the field name in PointsModel
+        },
+      },
+      {
+        $group: {
+          _id: {
+            userId: "$userId", // Group by userId and type
+            type: "$type",
+          },
+          totalPoints: {
+            $sum: "$points", // Sum the 'points' field for each type
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id.userId", // Group by userId again to consolidate point types
+          pointsByType: {
+            $push: {
+              k: "$_id.type", // Convert point types to keys
+              v: "$totalPoints", // Convert totals to values
+            },
+          },
+          totalPoints: { // Total points from all types
+            $sum: "$totalPoints"
           }
         }
-      ]);
+      },
+      {
+        $addFields: {
+          pointsObject: { $arrayToObject: "$pointsByType" }, // Convert array to object
+        }
+      },
+      {
+        $lookup: {
+          from: 'users', // Ensure 'users' is the correct collection name
+          localField: '_id', // Use '_id' from group as local field
+          foreignField: '_id', // Use '_id' as the foreign field in 'users'
+          as: 'userDetails',
+        },
+      },
+      {
+        $unwind: "$userDetails", // Unwind the userDetails array
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: "$_id",
+          totalPoints: 1,
+          isPremium: '$userDetails.isPremium',
+          name: '$userDetails.userName',
+          pointsObject: 1, // Project the pointsObject
+        },
+      }
+    ]);
 
-      return topUsers;
-    } catch (error) {
-      console.error("Error fetching top users with points: ", error);
+    if (topUsers.length === 0) {
+      console.warn("No users found with the given userId.");
+      return { message: "No users found", user: [] };
     }
-  };
+
+    // Restructure the response
+    const result = {
+      user: topUsers.map(user => ({
+        ...user,
+        ...user.pointsObject // Merge pointsObject into the user object
+      })
+   
+      ),
+   
+      message: "Fetched successfully",
+    };
+
+    const FinalResult = result.user[0]
+
+    delete FinalResult.pointsObject
+
+    return FinalResult;
+  } catch (error) {
+    console.error("Error fetching top users with points: ", error.message);
+    throw error; // Rethrow the error if needed for higher-level handling
+  }
+};
 
 
 
