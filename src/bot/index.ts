@@ -1,5 +1,6 @@
 import { Telegraf, Markup } from 'telegraf';
-import { CreateUser, createUserHelper, myFriendsList } from '../helper/user.helper';
+import { myFriendsList } from '../helper/user.helper';
+import { CreateUser, createUserHelper } from '../v2/controller/user.controller';
 
 let bot: Telegraf;
 

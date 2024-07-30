@@ -135,7 +135,7 @@ function calculateYearsAgo(id) {
     const index = creationDates.findIndex(d => d.startId >= id);
     const dateData = creationDates[index];
     const month = dateData?.m || 1
-    const year = dateData?.y || 1
+    const year = dateData?.y || new Date().getFullYear();
 
     if(month == 0 || year == 0) return 1
     // Get the current date
