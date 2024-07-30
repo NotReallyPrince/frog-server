@@ -72,16 +72,20 @@ router.get('/age/:userId', (req: Request, res: Response) => {
   })
 })
 
-router.get('/leadership-board', (req: Request, res: Response) => {
+router.get('/leadership-board/:userId', (req: Request, res: Response) => {
   const page: any = req.params.page || 1;
   const perPage: any = req.params?.perPage || 100;
-  getLeadershipBoard(page, perPage).then((user) => {
+  getLeadershipBoard(page, perPage, req?.params?.userId).then((user) => {
     return res.status(200).json({data: user, message: 'Fetched successfully'})
   }).catch(err => {
+    console.log(err);
+    
     res.status(500).json({ err, message: "User details fetching failed" })
   })
 })
 
+// router.get('/myfriends/:id', (req: Request, res: Response) => {
+//   const { id } = req.params;
 router.get('/myPos/:id',(req:Request, res:Response) => {
   const { id } = req.params;
 
@@ -123,4 +127,4 @@ router.get('/telegram/:id', (req: Request, res: Response) => {
 })
 
 
-export default router
+export default router;

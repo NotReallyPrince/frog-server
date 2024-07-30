@@ -1,11 +1,12 @@
 import { PrismaClient, User } from '@prisma/client'
 import { generatePointsOnRegister } from '../utils/generatePointsOnRegister';
-import bot from '../bot';
+import bot from '../v2/bot';
 
 const prismaService = new PrismaClient()
 
 export type CreateUser = {
-  id: number;
+  id?: number;
+  tgId?: number;
   firstName?: string;
   lastName?: string;
   userName?: string;
@@ -258,7 +259,7 @@ export const createUserHelper = async (createUserData: CreateUser):Promise<any> 
 export const getUserDetailsById = async (id):Promise<any> => {
   const usersCount:number = await prismaService.user.count();
   const user:any = await prismaService.user.findFirst({ 
-    where: { id: id },
+    where: { tgId: Number(id) },
     // include: {
     //   point: {
     //     select: {
@@ -326,7 +327,7 @@ export const getUserDetailsByTgId = async (id):Promise<any> => {
   return user
 }
 
-export const getLeadershipBoard = async (page: number, pageSize: number) => {
+export const getLeadershipBoard = async (page: number, pageSize: number, userId: string) => {
   // Calculate the number of items to skip
   const skip = (page - 1) * pageSize;
 
@@ -355,8 +356,26 @@ export const getLeadershipBoard = async (page: number, pageSize: number) => {
     })
   ]) 
 
+  // Fetch the current user's points
+  const userDetails = await getUserDetailsById(userId)
+
+  const userPoints = userDetails.points;
+
+  // Count the number of users with more points than the current user
+  const usersWithMorePoints = await prismaService.user.count({
+    where: {
+      points: {
+        gt: userPoints,
+      },
+    },
+  });
+
+  // The rank is the number of users with more points + 1
+  const userRank = usersWithMorePoints + 1;
   // Get paginated, sorted users with selected fields
 
+  console.log(userRank, 'this is user rank');
+  
   return {
     totalCount,
     users,
@@ -471,7 +490,6 @@ const channelMemberCheck = async (user:User) => {
     return user
 
   const { status } = await bot.telegram.getChatMember(process.env.CHANNEL_ID,user.tgId);
-
   if(
     status == 'administrator' ||
     status == 'creator' ||

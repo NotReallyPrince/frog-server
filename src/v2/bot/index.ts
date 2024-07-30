@@ -1,5 +1,6 @@
 import { Telegraf, Markup } from 'telegraf';
-import { CreateUser, createUserHelper, myFriendsList } from '../helper/user.helper';
+import { CreateUser, createUserHelper } from '../controller/user.controller';
+
 
 let bot: Telegraf;
 
@@ -10,7 +11,7 @@ try{
     const referalId = ctx.text.split(' ')[1]
 
     const userDetails:CreateUser = {
-      id: ctx.from.id,
+      tgId: ctx.from.id,
       firstName: ctx.from?.first_name,
       lastName: ctx.from?.last_name,
       userName:  ctx.from?.username,
@@ -42,16 +43,7 @@ try{
 
   })
 
-  // bot.command('friends', async ctx => {
-  //   const list = await myFriendsList(ctx.from.id);
-  //   ctx.reply(JSON.stringify(list))
-  // })
 
-  // bot.command('text', async ctx => {
-  //   const { status } = await bot.telegram.getChatMember('@giraff_bot_coomuni',ctx.from.id);
-  //   console.log(status);
-    
-  // })
 
 
 
