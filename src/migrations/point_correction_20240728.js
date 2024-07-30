@@ -123,7 +123,7 @@ const restructureUsersList = (users, referals) => {
     user.referredBy = getReferedBy(user?._id, referals);
     user.accountAge = user?.createdAt;
     user._id = new ObjectId(user._id);
-
+    
     delete user.isChannelMember;
     delete user.points;
     delete user.isTwitter;
