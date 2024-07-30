@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { MongoClient } = require("mongodb");
-const uri = "mongodb+srv://amshen:amshen123@cluster0.tkbajim.mongodb.net";
+const uri = "mongodb+srv://ape:ySLBaDt0BuouYqXi@atlascluster.rbiewzn.mongodb.net/Frog";
 const LAKH = 100000;
 
 const up = async () => {
