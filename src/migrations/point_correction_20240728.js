@@ -8,8 +8,8 @@ const up = async () => {
     const client = new MongoClient(uri);
     const db = await client.db("Frog");
 
-    const currentUsers = await db.collection("User").find().toArray();
-    const currentReferals = await db.collection("Referal").find().toArray();
+    const currentUsers = await db.collection("User").find({}).toArray();
+    const currentReferals = await db.collection("Referal").find({}).toArray();
 
     const points = [];
     for (let i = 0; i < currentUsers?.length; i++) {
@@ -23,10 +23,10 @@ const up = async () => {
       currentReferals
     );
 
-    await Promise.all([
-      db.collection("users").insertMany(restructureUsers),
-      db.collection("userpoints").insertMany(points),
-    ]);
+    // await Promise.all([
+    //   db.collection("users").insertMany(restructureUsers),
+    //   db.collection("userpoints").insertMany(points),
+    // ]);
     console.log("Migration completed Successfully");
     process.exit(0);
   } catch (err) {
@@ -79,7 +79,8 @@ const generatePoints = (user, referals, usersList) => {
     let referalPoint = 0;
     let referal = referals[i];
     if (String(referal.referedById) == String(user?._id)) {
-      referalPoint = Number(getReferalPoint(usersList, referal.referedById));
+      referalPoint = Number(getReferalPoint(usersList, referal.userId, user));
+
       if (referalPoint > 0) {
         pointsData.push({
           type: "referral",
