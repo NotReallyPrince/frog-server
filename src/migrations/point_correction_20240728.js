@@ -80,15 +80,12 @@ const generatePoints = (user, referals, usersList) => {
     let referal = referals[i];
     if (String(referal.referedById) == String(user?._id)) {
       referalPoint = Number(getReferalPoint(usersList, referal.userId, user));
-
-      if (referalPoint > 0) {
         pointsData.push({
           type: "referral",
           userId: new ObjectId(user._id),
           referred: new ObjectId(referal.userId),
           points: referalPoint,
         });
-      }
     }
   }
 
