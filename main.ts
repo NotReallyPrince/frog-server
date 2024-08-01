@@ -42,8 +42,6 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-// Routes
-app.use('/user', userRoute);
 app.use('/v2/user', userV2Router);
 app.use('/v2/secret', secretRouter);
 // Bot token

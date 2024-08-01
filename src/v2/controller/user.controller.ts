@@ -44,7 +44,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
         userName: string;
         isPremium: boolean;
         accountAge: number | string;
-        referredBy: any;
+        referredBy?: any;
       } = {
         tgId: data.id,
         firstName: data.firstName,
@@ -52,7 +52,6 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
         userName: data.userName,
         isPremium: data?.premium,
         accountAge: years,
-        referredBy: "",
       };
       if (data?.referedBy) {
         const referredUser = await UserModel.findOne({ tgId: data?.referedBy });
