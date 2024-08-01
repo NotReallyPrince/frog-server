@@ -11,11 +11,6 @@ export interface IToken extends Document {
 
 // Token Schema
 const TokenSchema = new Schema<IToken>({
-    platform: {
-        type: String,
-        required: true,
-        enum: ['Instagram', 'Telegram', 'Twitter'], // Restrict to valid platforms
-    },
     secretToken: {
         type: String,
         required: true,

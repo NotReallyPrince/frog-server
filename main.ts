@@ -4,11 +4,13 @@ import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
 import { connectDatabase } from './src/config/databaseConnection';
 import dotenv from 'dotenv';
-import { userRoute } from './src/routes';
+import session from 'express-session';
 import secretRouter from './src/v2/routes/secret.routes';
 import userV2Router from './src/v2/routes/user.routes';
 import { Markup, Telegraf, Context } from 'telegraf'; // Importing Context
 import { createUserHelper, CreateUser } from './src/v2/controller/user.controller';
+import passport from 'passport';
+import { isAuthenticated } from './src/v2/middlewares/requestValidators/auth.middleware';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -36,6 +38,15 @@ app.use(limiter);
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Preflight requests
 app.use(bodyParser.json());
+app.use(session({
+  secret: 'your_secret_key', // Replace with a secure secret key
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Set secure: true in production with HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Root route
 app.get("/", (req: Request, res: Response) => {
@@ -43,7 +54,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/v2/user', userV2Router);
-app.use('/v2/secret', secretRouter);
+app.use('/v2/secret',secretRouter);
 // Bot token
 const token = process.env.BOT_TOKEN;
 let bot: Telegraf<Context>; // Use the Context type for better type safety

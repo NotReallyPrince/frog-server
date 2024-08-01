@@ -1,5 +1,7 @@
-import { IRouter, Request, Response, Router } from "express";
-import { CreateUser, createUserHelper, friendsDetailsPage, HomePageUserDetailsController, leadershipController, telegramMemberCheckController } from "../controller/user.controller";
+import { IRouter, NextFunction, Request, Response, Router } from "express";
+import { CreateUser, createUserHelper, friendsDetailsPage, HomePageUserDetailsController, leadershipController, signupController, telegramMemberCheckController } from "../controller/user.controller";
+import passport from "../../config/passport";
+import { IAdmin } from "../models/admin.model";
 
 
 
@@ -65,5 +67,36 @@ router.get('/friends/:userId', (req: Request, res: Response) => {
         res.status(501).json({message: 'Something went wrong!'})
     })
 })
+
+router.post('/admin/login', (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate('local', (err: any, user: IAdmin, info: any) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed' });
+    }
+     // @ts-ignore -
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+       // @ts-ignore -
+      res.status(200).json({ message: 'Logged in successfully' });
+    });
+  })(req, res, next);
+});
+
+router.post('/admin/create', (req: Request, res: Response) => {
+  
+  const body:any = req?.body
+  
+  signupController(body).then(data => {
+      res.status(200).json({data})
+  }).catch(err => {
+      res.status(501).json({message: 'Something went wrong!'})
+  })
+})
+
 
 export default router;

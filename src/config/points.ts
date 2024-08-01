@@ -8,5 +8,6 @@ export const pointsData = {
 export enum pointType {
         CHANNEL = 'channel_member',
         TWITTER = 'twitter',
-        APE_NAME = 'ape_in_name'
+        APE_NAME = 'ape_in_name',
+        SECRET = 'secret_token'
 }

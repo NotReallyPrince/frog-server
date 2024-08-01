@@ -2,10 +2,9 @@ import { TokenModel } from "../models/secret.model";
 
 
 export const generateToken = async (data) => {
-    const { platform, secretToken, points, userLimit, expiryTime } = data;
+    const {secretToken, points, userLimit, expiryTime } = data;
     try{
         const newToken = new TokenModel({
-            platform,
             secretToken,
             points,
             userLimit,

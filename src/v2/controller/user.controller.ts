@@ -14,6 +14,7 @@ import {
   getTopUsersWithPoints,
   getTopUsersWithSpecificUserRank,
 } from "../queries/user.queries";
+import { AdminModel } from "../models/admin.model";
 
 export type CreateUser = {
   id?: number;
@@ -154,3 +155,20 @@ export const friendsDetailsPage = (userId) => {
         }
     })
 }
+
+
+
+export const signupController = (body) => {
+  return new Promise(async (resolve, reject) => {
+      try{
+        const { username, password } = body;
+        const newUser = new AdminModel({ username, password });
+        newUser.save()
+        resolve(newUser)
+      }catch(err){
+        console.log(err)
+          reject(err)
+      }
+  })
+}
+
