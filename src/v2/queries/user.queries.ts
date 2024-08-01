@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { PointsModel } from "../../models/points.model"
-import { UserModel } from "../../models/user.model";
+import { PointsModel } from "../models/points.model"
+import { UserModel } from "../models/user.model";
 
 
 export const getTopUsersWithPoints = async (userid) => {

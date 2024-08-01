@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { pointsData } from "../../config/points";
-import { ReferalModel } from "../../models/referal.previous.model";
-import { IUserModel, UserModel } from "../../models/user.model";
+import {  UserModel } from "../models/user.model";
 import calculateYearsAgo from "../../utils/calculateAccountAge";
 import { generatePointsOnRegister } from "../../utils/generatePointsOnRegister";
 import {
@@ -9,7 +8,7 @@ import {
   channelMemberCheck,
   twitterCheck,
 } from "../helper/user.helper";
-import { PointsModel } from "../../models/points.model";
+import { PointsModel } from "../models/points.model";
 import {
   getFriendsDetails,
   getTopUsersWithPoints,

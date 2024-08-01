@@ -1,7 +1,7 @@
 import bot from "../bot";
 import { pointsData, pointType } from "../../config/points";
-import { PointsModel } from "../../models/points.model";
-import { IUserModel } from "../../models/user.model";
+import { PointsModel } from "../models/points.model";
+import { IUserModel } from "../models/user.model";
 
 export const channelMemberCheck = async (user:IUserModel) => {
     try{

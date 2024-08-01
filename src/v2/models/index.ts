@@ -1,9 +1,9 @@
 import { PointsModel } from "./points.model"
 import { UserModel } from "./user.model"
-import { ReferalModel } from "./referal.previous.model"
+import {TokenModel} from "./secret.model"
 
 export default {
     UserModel,
     PointsModel,
-    ReferalModel
+    TokenModel
 }

@@ -5,6 +5,7 @@ import { rateLimit } from 'express-rate-limit';
 import { connectDatabase } from './src/config/databaseConnection';
 import dotenv from 'dotenv';
 import { userRoute } from './src/routes';
+import secretRouter from './src/v2/routes/secret.routes';
 import userV2Router from './src/v2/routes/user.routes';
 import { Markup, Telegraf, Context } from 'telegraf'; // Importing Context
 import { createUserHelper, CreateUser } from './src/v2/controller/user.controller';
@@ -44,7 +45,7 @@ app.get("/", (req: Request, res: Response) => {
 // Routes
 app.use('/user', userRoute);
 app.use('/v2/user', userV2Router);
-
+app.use('/v2/secret', secretRouter);
 // Bot token
 const token = process.env.BOT_TOKEN;
 let bot: Telegraf<Context>; // Use the Context type for better type safety

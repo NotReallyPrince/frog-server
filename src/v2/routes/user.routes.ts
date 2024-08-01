@@ -1,7 +1,7 @@
 import { IRouter, Request, Response, Router } from "express";
 import { CreateUser, createUserHelper, friendsDetailsPage, HomePageUserDetailsController, leadershipController, telegramMemberCheckController } from "../controller/user.controller";
 
-import { getTopUsersWithPoints } from "../queries/user.queries";
+
 
 const router: IRouter = Router();
 

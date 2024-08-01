@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     referredBy: {
-        type: String
+        type:  mongoose.Schema.Types.ObjectId,
     }
 }, {timestamps: true})
 
