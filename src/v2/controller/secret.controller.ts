@@ -44,10 +44,9 @@ export const deleteTokens = (id) => {
 
      
       try {
-        const { secret } = body;
-        const userID = 'sfsfsf' // this will change once passport added
-
+        const { secret,userID } = body;
         const token = await findToken(secret)
+        console.log(token)
         if (!token) {
             reject('invalid Token')
         }
@@ -72,7 +71,7 @@ export const deleteTokens = (id) => {
         });
 
         await pointsEntry.save();
-        resolve(pointsEntry);
+        resolve('REDEEMED');
       } catch (error) {
         reject(error);
       }

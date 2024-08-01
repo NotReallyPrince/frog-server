@@ -35,12 +35,11 @@ router.post('/generate',isAuthenticated, (req: Request, res: Response) => {
   })
 
   router.post('/token/redeem', (req: Request, res: Response) => {
-
-    const {body} =req.body
+    const {body} =req
     redeemToken(body).then((data) => {
-      return res.status(200).json({data, message: 'Token deleted Successfully'})
+      return res.status(200).json({data, message: 'Token redeemed Successfully'})
     }).catch(err => {
-      res.status(500).json({ err, message: "Failed to delete Token" })
+      res.status(500).json({ err, message: "Failed to Redeem Token" })
     })
   })
 
