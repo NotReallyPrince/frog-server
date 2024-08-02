@@ -89,7 +89,7 @@ try {
       const text = 'Invite Your friends';
 
       await ctx.reply(
-        `Hi ${user.firstName}, Welcome to Apes community 🦧`,
+        `Hi ${userDetails.firstName}, Welcome to Apes community 🦧`,
         Markup.inlineKeyboard([
           Markup.button.webApp("Let's Climb 🦧", 'https://frog-frontend.vercel.app/'),
           Markup.button.url(

@@ -14,7 +14,7 @@ const PointsSchema = new mongoose.Schema({
         type:  mongoose.Schema.Types.ObjectId,
     },
     point: {
-        type: String,
+        type: Number,
         required: true,
         index: true 
     }
