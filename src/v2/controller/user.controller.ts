@@ -33,7 +33,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       let user: any = await UserModel.findOne({ tgId: data.id });
 
       if (user) {
-        resolve(channelMemberCheck(user));
+       return resolve(channelMemberCheck(user));
       }
 
       const years: number = calculateYearsAgo(data?.tgId);
