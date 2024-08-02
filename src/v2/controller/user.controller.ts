@@ -63,7 +63,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       let userPoints = [
         {
           userId: user._id,
-          point: generatePointsOnRegister(years, userCount),
+          points: generatePointsOnRegister(years, userCount),
           type: "account_age",
         },
       ];
@@ -71,7 +71,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       if (data.premium) {
         userPoints.push({
           userId: user._id,
-          point: pointsData.premium,
+          points: pointsData.premium,
           type: "telegram_premium",
         });
       }
@@ -79,7 +79,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       if (data?.userName?.includes("ape")) {
         userPoints.push({
           userId: user._id,
-          point: pointsData.apeInName,
+          points: pointsData.apeInName,
           type: "ape_in_name",
         });
       }

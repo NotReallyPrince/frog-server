@@ -156,7 +156,7 @@ export const getTopUsersWithPoints = async (userid) => {
                 pointsDetails: {
                   $push: {
                     type: "$type",
-                    point: "$point"
+                    points: "$points"
                   }
                 }
               }

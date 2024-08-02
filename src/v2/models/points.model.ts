@@ -13,7 +13,7 @@ const PointsSchema = new mongoose.Schema({
     referred: {
         type:  mongoose.Schema.Types.ObjectId,
     },
-    point: {
+    points: {
         type: Number,
         required: true,
         index: true 

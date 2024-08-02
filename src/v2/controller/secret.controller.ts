@@ -66,7 +66,7 @@ export const deleteTokens = (id) => {
         const pointsEntry = new PointsModel({
             userId: userID,
             type: pointType.SECRET,
-            point: token.points, 
+            points: token.points, 
             referred: token._id,
         });
 
