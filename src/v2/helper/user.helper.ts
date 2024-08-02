@@ -17,7 +17,7 @@ export const channelMemberCheck = async (user:IUserModel) => {
           status == 'member'
         ) {
 
-          const points = new PointsModel({points: pointsData.telegram, userId: user._id})
+          const points = new PointsModel({points: pointsData.telegram, userId: user._id,type:pointType.CHANNEL})
           await points.save();
           return user;
         }
@@ -35,7 +35,7 @@ export const channelMemberCheck = async (user:IUserModel) => {
         const channelPoint = await PointsModel.findOne({userId: user._id, type: pointType.TWITTER})
         if(channelPoint)
           return {user, channelPoint}
-          const points = new PointsModel({points: pointsData.twitter, userId: user._id})
+          const points = new PointsModel({points: pointsData.twitter, userId: user._id,type:pointType.TWITTER})
           await points.save();
           return true;
     }catch(err){
@@ -50,7 +50,7 @@ export const channelMemberCheck = async (user:IUserModel) => {
           return {user, channelPoint}
 
         if(user?.userName && user?.userName?.includes('ape')){
-          const points = new PointsModel({points: pointsData.apeInName, userId: user._id})
+          const points = new PointsModel({points: pointsData.apeInName, userId: user._id,type:pointType.APE_NAME})
           await points.save();
           return true;
         }
