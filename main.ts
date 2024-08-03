@@ -37,6 +37,8 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Preflight requests
+app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
+app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
 app.use(session({
   secret: 'your_secret_key', // Replace with a secure secret key
