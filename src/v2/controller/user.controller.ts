@@ -172,3 +172,15 @@ export const signupController = (body) => {
   })
 }
 
+
+export const checkUserController = ()=>{
+  return new Promise(async (resolve, reject) => {
+    try{
+      
+    }catch(err){
+      
+        reject(err)
+    }
+})
+}
+

@@ -2,6 +2,7 @@ import { IRouter, NextFunction, Request, Response, Router } from "express";
 import { CreateUser, createUserHelper, friendsDetailsPage, HomePageUserDetailsController, leadershipController, signupController, telegramMemberCheckController } from "../controller/user.controller";
 import passport from "../../config/passport";
 import { IAdmin } from "../models/admin.model";
+import { CANCELLED } from "dns";
 
 
 
@@ -96,6 +97,18 @@ router.post('/admin/create', (req: Request, res: Response) => {
   }).catch(err => {
       res.status(501).json({message: 'Something went wrong!'})
   })
+})
+
+router.post('/admin/check', (req: Request, res: Response) => {
+  
+try{
+  if (req?.isAuthenticated()) {
+     res.status(200).json({message:'authenticated',res})
+  }
+  res.status(500).json({message:'user is not authenticateed',res})
+}catch(err){
+
+}
 })
 
 
