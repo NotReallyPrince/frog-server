@@ -107,7 +107,7 @@ try{
   }
   res.status(500).json({message:'user is not authenticateed',res})
 }catch(err){
-
+  res.status(501).json({message: 'Something went wrong!'})
 }
 })
 
