@@ -48,19 +48,19 @@ export const deleteTokens = (id) => {
         const token = await findToken(secret)
         console.log(token)
         if (!token) {
-            reject('invalid Token')
+            return reject('invalid Token')
         }
         if (new Date() > token.expiryTime) {
-            reject('Token Expired')
+            return reject('Token Expired')
         }
         const redemptionCount = await PointsModel.countDocuments({ referred: token._id });
         if (redemptionCount >= token.userLimit) {
-            reject('Token redemption limit reached' )
+           return reject('Token redemption limit reached' )
         }
 
         const userRedemption = await PointsModel.findOne({ userId:userID, referred: token._id });
         if (userRedemption) {
-            reject('User has already redeemed this token' )
+           return reject('User has already redeemed this token' )
         }
 
         const pointsEntry = new PointsModel({
@@ -71,7 +71,7 @@ export const deleteTokens = (id) => {
         });
 
         await pointsEntry.save();
-        resolve('REDEEMED');
+        resolve({message:'REDEEMED',point:token.points});
       } catch (error) {
         reject(error);
       }

@@ -41,7 +41,7 @@ router.get('/age-and-coins/:userId', (req: Request, res: Response) => {
     }).catch(err => {
       console.log(err);
       
-      res.status(500).json({ err, message: "User details fetching failed" })
+      res.status(500).json({ err:'FAILED', message: "User details fetching failed" })
     })
   })
 
@@ -77,12 +77,12 @@ router.post('/admin/login', (req: Request, res: Response, next: NextFunction) =>
     if (!user) {
       return res.status(401).json({ message: 'Authentication failed' });
     }
-     // @ts-ignore -
+  
     req.logIn(user, (err) => {
       if (err) {
         return next(err);
       }
-       // @ts-ignore -
+
       res.status(200).json({ message: 'Logged in successfully' });
     });
   })(req, res, next);
