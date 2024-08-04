@@ -46,7 +46,7 @@ app.use(session({
   secret: 'your_secret_key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: true,sameSite:'None' } ,
+  cookie: { secure: true,sameSite:'None',domain:'https://bot-admin-panel-phi.vercel.app'} ,
 
 }))
 
