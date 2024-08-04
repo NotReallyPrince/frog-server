@@ -99,17 +99,16 @@ router.post('/admin/create', (req: Request, res: Response) => {
   })
 })
 
-router.post('/admin/check', (req: Request, res: Response) => {
-  
-try{
-  if (req?.isAuthenticated()) {
-     res.status(200).json({message:'authenticated',res})
-  }
-  res.status(500).json({message:'user is not authenticateed',res})
-}catch(err){
-  res.status(501).json({message: 'Something went wrong!'})
-}
-})
 
+router.get('/admin/check', (req: Request, res: Response) => {
+  try{
+    if(req?.isAuthenticated()){
+      return res.status(200).json({status: true, message: "Authenticated"})
+    }
+    res.status(401).json({message: "User Not authenticated", status: false})
+  }catch(err){
+    res.status(501).json({message: "Something went wrong!"})
+  }
+})
 
 export default router;
