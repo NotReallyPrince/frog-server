@@ -131,7 +131,7 @@ router.get("/admin/check", (req: Request, res: Response) => {
   }
 });
 
-router.get("/user/referal-count/:id", (req: Request, res: Response) => {
+router.get("/referal-count/:id", (req: Request, res: Response) => {
   const { id } = req.params;
   getReferalCountFromPublishedDate(id)
     .then((data) => {
