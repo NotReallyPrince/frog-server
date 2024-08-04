@@ -91,6 +91,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
             userId: referredUser._id,
             points: Math.floor((account_age_point * 20) / 100),
             type: pointType.REFERRAL,
+            referred:user._id
           }
         )
           await addUser.save()
