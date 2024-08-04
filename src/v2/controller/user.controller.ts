@@ -93,7 +93,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
             type: pointType.REFERRAL,
           }
         )
-          await addUser.points
+          await addUser.save()
       }
 
       const pointSaveData = await PointsModel.insertMany(userPoints);
