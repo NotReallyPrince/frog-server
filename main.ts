@@ -31,6 +31,7 @@ const limiter = rateLimit({
   limit: 100, // Limit each IP to 100 requests per `window`
   standardHeaders: true, // draft-7: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+
 });
 
 // Apply middlewares
@@ -40,12 +41,14 @@ app.options('*', cors(corsOptions)); // Preflight requests
 app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
+
 app.use(session({
-  secret: 'your_secret_key', // Replace with a secure secret key
+  secret: 'your_secret_key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set secure: true in production with HTTPS
-}));
+  cookie: { secure: false,sameSite:'none' } ,
+
+}))
 
 app.use(passport.initialize());
 app.use(passport.session());
