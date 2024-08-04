@@ -50,7 +50,7 @@ app.use(session({
     secure: false, // Ensure cookies are only sent over HTTPS
     sameSite: 'None', // Allow cookies to be sent cross-site
     httpOnly: true, // Prevent cookies from being accessed via JavaScript
-    domain: '.apescommunity.com', // Allow cookies to be sent to all subdomains of this domain,
+    domain: 'api.apescommunity.com', // Allow cookies to be sent to all subdomains of this domain,
     maxAge: 24 * 60 * 60 * 1000
   },
 }));
