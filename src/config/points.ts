@@ -9,5 +9,6 @@ export enum pointType {
         CHANNEL = 'channel_member',
         TWITTER = 'twitter',
         APE_NAME = 'ape_in_name',
-        SECRET = 'secret_token'
+        SECRET = 'secret_token',
+        REFERRAL = 'referral'
 }
