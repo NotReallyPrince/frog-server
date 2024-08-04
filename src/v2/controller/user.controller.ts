@@ -59,11 +59,12 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
         dataToSave.referredBy = new mongoose.Types.ObjectId(referredUser?._id);
       }
       user = await new UserModel(dataToSave).save();
+      const account_age_point = generatePointsOnRegister(years, userCount)
 
       let userPoints = [
         {
           userId: user._id,
-          points: generatePointsOnRegister(years, userCount),
+          points: account_age_point,
           type: "account_age",
         },
       ];
@@ -81,7 +82,15 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
           userId: user._id,
           points: pointsData.apeInName,
           type: "ape_in_name",
-        });
+        })
+      }
+
+      if(data?.referedBy){
+        userPoints.push({
+          userId: user._id,
+          points: (account_age_point * 20) / 100,
+          type: "referral",
+        })
       }
 
       const pointSaveData = await PointsModel.insertMany(userPoints);

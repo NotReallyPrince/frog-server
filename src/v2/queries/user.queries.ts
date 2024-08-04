@@ -83,7 +83,6 @@ export const getTopUsersWithPoints = async (userid) => {
       })
    
       ),
-   
       message: "Fetched successfully",
     };
 
