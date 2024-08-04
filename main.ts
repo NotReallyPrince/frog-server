@@ -44,7 +44,7 @@ app.use(session({
   secret: 'your_secret_key', // Replace with a secure secret key
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set secure: true in production with HTTPS
+  cookie: { secure: true } // Set secure: true in production with HTTPS
 }));
 
 app.use(passport.initialize());
