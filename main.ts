@@ -21,7 +21,8 @@ const PORT = process.env.PORT || 5200;
 
 // CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app','https://bot-admin-panel-phi.vercel.app'],
+  // origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app','https://bot-admin-panel-phi.vercel.app'],
+  origin:'*',
   credentials: true,
 };
 
@@ -47,10 +48,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true, // Ensure cookies are only sent over HTTPS
-    sameSite: 'None', // Allow cookies to be sent cross-site
-    httpOnly: true, // Prevent cookies from being accessed via JavaScript
-    domain: '.bot-admin-panel-phi.vercel.app' // Allow cookies to be sent to all subdomains of this domain
+    secure: true,
+    sameSite: 'None',
+    httpOnly: true,
+
   },
 }));
 
