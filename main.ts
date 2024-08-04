@@ -46,7 +46,7 @@ app.use(session({
   secret: 'your_secret_key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false,sameSite:'none' } ,
+  cookie: { secure: true,sameSite:'None' } ,
 
 }))
 
