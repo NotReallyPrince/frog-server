@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { pointsData } from "../../config/points";
-import {  UserModel } from "../models/user.model";
+import { UserModel } from "../models/user.model";
 import calculateYearsAgo from "../../utils/calculateAccountAge";
 import { generatePointsOnRegister } from "../../utils/generatePointsOnRegister";
 import {
@@ -23,7 +23,7 @@ export type CreateUser = {
   lastName?: string;
   userName?: string;
   premium?: boolean;
-  referedBy?: number;
+  referedBy?: string;
   isPremium?: boolean;
 };
 
@@ -33,10 +33,10 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       let user: any = await UserModel.findOne({ tgId: data.id });
 
       if (user) {
-       return resolve(channelMemberCheck(user));
+        return resolve(channelMemberCheck(user));
       }
 
-      const years: number = calculateYearsAgo(data?.tgId);
+      const years: number = calculateYearsAgo(data?.id);
       const userCount: number = await UserModel.find({}).countDocuments();
       const dataToSave: {
         tgId: number | string;
@@ -56,7 +56,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       };
       if (data?.referedBy) {
         const referredUser = await UserModel.findOne({ tgId: data?.referedBy });
-        dataToSave.referredBy = new mongoose.Types.Array(referredUser?._id);
+        dataToSave.referredBy = new mongoose.Types.ObjectId(referredUser?._id);
       }
       user = await new UserModel(dataToSave).save();
 
@@ -143,44 +143,47 @@ export const telegramMemberCheckController = (userid: number) => {
     }
   });
 };
-    
 
 export const friendsDetailsPage = (userId) => {
-    return new Promise(async (resolve, reject) => {
-        try{
-            const friends = await getFriendsDetails(userId);
-            resolve(friends)
-        }catch(err){
-            reject(err)
-        }
-    })
-}
-
-
+  return new Promise(async (resolve, reject) => {
+    try {
+      const friends = await getFriendsDetails(userId);
+      resolve(friends);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
 
 export const signupController = (body) => {
   return new Promise(async (resolve, reject) => {
-      try{
-        const { username, password } = body;
-        const newUser = new AdminModel({ username, password });
-        newUser.save()
-        resolve(newUser)
-      }catch(err){
-        console.log(err)
-          reject(err)
-      }
-  })
-}
-
-
-export const checkUserController = ()=>{
-  return new Promise(async (resolve, reject) => {
-    try{
-      
-    }catch(err){
-      
-        reject(err)
+    try {
+      const { username, password } = body;
+      const newUser = new AdminModel({ username, password });
+      newUser.save();
+      resolve(newUser);
+    } catch (err) {
+      console.log(err);
+      reject(err);
     }
-})
-}
+  });
+};
 
+export const getReferalCountFromPublishedDate = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const PUBLISHED_DATE = "2024-08-04";
+
+      const referalCount = await UserModel.countDocuments({
+        createdAt: {
+          $gte: PUBLISHED_DATE,
+        },
+        referredBy: id,
+      });
+
+      resolve(referalCount);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

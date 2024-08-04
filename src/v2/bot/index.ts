@@ -19,7 +19,7 @@ try{
     }
 
     if(referalId)
-      userDetails.referedBy = parseInt(referalId)
+      userDetails.referedBy = referalId
 
     const user: any = await createUserHelper(userDetails)
 

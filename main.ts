@@ -80,8 +80,7 @@ try {
       isPremium: ctx.from.is_premium || false, // Default to false if undefined
     };
 
-    if (referalId) userDetails.referedBy = parseInt(referalId);
-
+    if (referalId) userDetails.referedBy = referalId
     try {
       const user: any = await createUserHelper(userDetails); // Await the promise
       console.log(user);
