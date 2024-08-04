@@ -4,13 +4,14 @@ import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
 import { connectDatabase } from './src/config/databaseConnection';
 import dotenv from 'dotenv';
-import session from 'express-session';
 import secretRouter from './src/v2/routes/secret.routes';
 import userV2Router from './src/v2/routes/user.routes';
 import { Markup, Telegraf, Context } from 'telegraf'; // Importing Context
 import { createUserHelper, CreateUser } from './src/v2/controller/user.controller';
 import passport from 'passport';
 import { isAuthenticated } from './src/v2/middlewares/requestValidators/auth.middleware';
+import cookieParser from 'cookie-parser'
+import cookieSession from 'cookie-session'
 
 // Load environment variables from .env file
 dotenv.config();
@@ -42,18 +43,30 @@ app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
 
-app.use(session({
-  secret: 'your_secret_key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false, // Ensure cookies are only sent over HTTPS
-    sameSite: 'None', 
-    maxAge: 24 * 60 * 60 * 1000
-  },
-}));
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ['test' as any],
+    maxAge: 60 * 24 * 60 * 60 * 100
+  })
+);
+
+app.use(function(req, _, next) {
+  if (req.session && !req.session.regenerate) {
+      req.session.regenerate = (cb:any) => {
+          cb()
+      }
+  }
+  if (req.session && !req.session.save) {
+      req.session.save = (cb: any) => {
+          cb()
+      }
+  }
+  next()
+})
 
 
+app.use(cookieParser())
 app.use(passport.initialize());
 app.use(passport.session());
 
