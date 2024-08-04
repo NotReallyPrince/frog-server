@@ -47,10 +47,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Ensure cookies are only sent over HTTPS // Allow cookies to be sent cross-site
-    httpOnly: true, // Prevent cookies from being accessed via JavaScript
-    domain: '.apescommunity.com', // Allow cookies to be sent to all subdomains of this domain,
-    maxAge: 24 * 60 * 60 * 1000
+    httpOnly: true,
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24 * 365
   },
 }));
 
