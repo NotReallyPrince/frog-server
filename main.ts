@@ -46,9 +46,14 @@ app.use(session({
   secret: 'your_secret_key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: true,sameSite:'None',domain:'https://bot-admin-panel-phi.vercel.app'} ,
+  cookie: {
+    secure: true, // Ensure cookies are only sent over HTTPS
+    sameSite: 'None', // Allow cookies to be sent cross-site
+    httpOnly: true, // Prevent cookies from being accessed via JavaScript
+    domain: '.bot-admin-panel-phi.vercel.app' // Allow cookies to be sent to all subdomains of this domain
+  },
+}));
 
-}))
 
 app.use(passport.initialize());
 app.use(passport.session());
