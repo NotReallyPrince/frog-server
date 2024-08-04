@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { pointsData } from "../../config/points";
+import { pointsData, pointType } from "../../config/points";
 import { UserModel } from "../models/user.model";
 import calculateYearsAgo from "../../utils/calculateAccountAge";
 import { generatePointsOnRegister } from "../../utils/generatePointsOnRegister";
@@ -31,7 +31,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     try {
       let user: any = await UserModel.findOne({ tgId: data.id });
-
+        let referredUser:any
       if (user) {
         return resolve(channelMemberCheck(user));
       }
@@ -55,7 +55,7 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
         accountAge: years,
       };
       if (data?.referedBy) {
-        const referredUser = await UserModel.findOne({ tgId: data?.referedBy });
+         referredUser = await UserModel.findOne({ tgId: data?.referedBy });
         dataToSave.referredBy = new mongoose.Types.ObjectId(referredUser?._id);
       }
       user = await new UserModel(dataToSave).save();
@@ -86,11 +86,14 @@ export const createUserHelper = (data: CreateUser): Promise<any> => {
       }
 
       if(data?.referedBy){
-        userPoints.push({
-          userId: user._id,
-          points: (account_age_point * 20) / 100,
-          type: "referral",
-        })
+        const addUser = new PointsModel(
+          {
+            userId: referredUser._id,
+            points: Math.floor((account_age_point * 20) / 100),
+            type: pointType.REFERRAL,
+          }
+        )
+          await addUser.points
       }
 
       const pointSaveData = await PointsModel.insertMany(userPoints);
