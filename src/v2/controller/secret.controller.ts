@@ -1,5 +1,5 @@
 import { pointType } from "../../config/points";
-import { generateToken } from "../helper/secret.helper";
+import { generateToken, getExpiryDate } from "../helper/secret.helper";
 import { PointsModel } from "../models/points.model";
 import { TokenModel } from "../models/secret.model";
 import { findToken, getActiveToken } from "../queries/secret.queries";
@@ -78,3 +78,13 @@ export const deleteTokens = (id) => {
     });
   };
   
+  export const  getValidity = ()=>{
+    return new Promise(async (resolve, reject) => {
+      try {
+        const validity = await getExpiryDate();
+        resolve(validity);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } 

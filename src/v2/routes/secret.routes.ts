@@ -1,6 +1,6 @@
 import { IRouter, Request, Response, Router } from "express";
 import { generateToken } from "../helper/secret.helper";
-import { deleteTokens, getTokens, redeemToken } from "../controller/secret.controller";
+import { deleteTokens, getTokens, getValidity, redeemToken } from "../controller/secret.controller";
 import { isAuthenticated } from "../middlewares/requestValidators/auth.middleware";
 
 const router: IRouter = Router();
@@ -42,6 +42,16 @@ router.post('/generate',isAuthenticated, (req: Request, res: Response) => {
       res.status(500).json({ err, message: "Failed to Redeem Token" })
     })
   })
+
+  router.get('/token/validity', (req: Request, res: Response) => {
+   
+    getValidity().then((data) => {
+      return res.status(200).json({data, message: 'Validity retrieved Successfully'})
+    }).catch(err => {
+      res.status(500).json({ err, message: "Failed to retrieve validty" })
+    })
+  })
+
 
   
 export default router;
