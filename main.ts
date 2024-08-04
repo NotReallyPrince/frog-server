@@ -50,7 +50,7 @@ app.use(session({
     secure: true, // Ensure cookies are only sent over HTTPS
     sameSite: 'None', // Allow cookies to be sent cross-site
     httpOnly: true, // Prevent cookies from being accessed via JavaScript
-    domain: '.bot-admin-panel-phi.vercel.app' // Allow cookies to be sent to all subdomains of this domain
+    domain: '.apescommunity.com' // Allow cookies to be sent to all subdomains of this domain
   },
 }));
 
