@@ -50,7 +50,8 @@ app.use(
     domain:'.apescommunity.com',
     sameSite:'none',
     maxAge: 60 * 24 * 60 * 60 * 100,
-    path:'/'
+    path:'/',
+    secure:true
   })
 );
 
