@@ -217,16 +217,12 @@ export const loginController = (body) => {
 export const getReferalCountFromPublishedDate = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const PUBLISHED_DATE = "2024-08-04";
-
-      const referalCount = await UserModel.countDocuments({
-        createdAt: {
-          $gte: PUBLISHED_DATE,
-        },
+      const PUBLISHED_DATE = new Date("2024-08-04");
+      const referralCount = await UserModel.countDocuments({
+        createdAt: { $gte: PUBLISHED_DATE },
         referredBy: id,
       });
-
-      resolve(referalCount);
+      resolve(referralCount);
     } catch (err) {
       reject(err);
     }
