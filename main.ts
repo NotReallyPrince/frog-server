@@ -46,7 +46,7 @@ app.use(
   cookieSession({
     name: "session",
     keys: ['test' as any],
-    secure:true,
+    domain:'.apescommunity.com',
     maxAge: 60 * 24 * 60 * 60 * 100
   })
 );
