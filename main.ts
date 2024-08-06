@@ -51,6 +51,7 @@ app.use(
     sameSite:'none',
     maxAge: 60 * 24 * 60 * 60 * 100,
     path:'/',
+    secureProxy:true,
     secure:true
   })
 );
