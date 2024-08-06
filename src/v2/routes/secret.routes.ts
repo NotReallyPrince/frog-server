@@ -1,6 +1,6 @@
 import { IRouter, Request, Response, Router } from "express";
 import { generateToken } from "../helper/secret.helper";
-import { deleteTokens, getTokens, getValidity, redeemToken } from "../controller/secret.controller";
+import { changeStatus, createTask, deleteTokens, getTask, getTokens, getValidity, redeemToken } from "../controller/secret.controller";
 import { validateJwtToken } from "../middlewares/jwtValidator";
 
 
@@ -53,6 +53,31 @@ router.post('/generate',validateJwtToken, (req: Request, res: Response) => {
     })
   })
 
+  router.post('/task/create', (req: Request, res: Response) => {
+    const {body} = req
+    createTask(body).then((data) => {
+      return res.status(200).json({data, message: 'Task Created Successfully'})
+    }).catch(err => {
+      res.status(500).json({ err, message: "Failed to create Task validty" })
+    })
+  })
+
+  router.get('/task/create', (req: Request, res: Response) => {
+    getTask().then((data) => {
+      return res.status(200).json({data, message: 'Validity retrieved Successfully'})
+    }).catch(err => {
+      res.status(500).json({ err, message: "Failed to retrieve validty" })
+    })
+  })
+
+  router.post('/task/change-status', (req: Request, res: Response) => {
+    const {body} =req
+    changeStatus(body).then((data) => {
+      return res.status(200).json({data, message: 'Validity retrieved Successfully'})
+    }).catch(err => {
+      res.status(500).json({ err, message: "Failed to retrieve validty" })
+    })
+  })
 
   
 export default router;
