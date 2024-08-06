@@ -41,14 +41,18 @@ app.options('*', cors(corsOptions)); // Preflight requests
 app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
+app.use(cookieParser('test'))
 // app.set('trust proxy', 1);
 
 app.use(
   cookieSession({
-    name: "session",
-    keys: ['adahdhjadad$$' as any],
-    maxAge: 60 * 24 * 60 * 60 * 100,
-  
+    name: 'session',
+    keys: ['test'], // Use your secret key
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: true,   // Ensures cookies are sent only over HTTPS
+    httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+    sameSite: 'none', // Allows cross-site cookies
+    domain: '.apescommunity.com', // Share cookie across subdomains
   })
 );
 
@@ -68,7 +72,7 @@ app.use(function(req, _, next) {
 })
 
 
-app.use(cookieParser())
+
 app.use(passport.initialize());
 app.use(passport.session());
 
