@@ -12,7 +12,7 @@ export const validateJwtToken = async (req: Request, res: Response, next: NextFu
   }
 
   try {
-    const jwtSecret = process.env.JWT_SECRET || ''; // Replace with your JWT secret
+    const jwtSecret = process.env.JWT_SECRET || 'secret--3'; // Replace with your JWT secret
     await jwt.verify(token, jwtSecret) as JwtPayload;
     req.headers.authorization = token as string;
     next();
