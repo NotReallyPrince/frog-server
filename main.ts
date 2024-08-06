@@ -49,9 +49,9 @@ app.use(
     keys: ['adahdhjadad$$' as any],
     sameSite:'none',
     maxAge: 60 * 24 * 60 * 60 * 100,
-    path:'/',
     secureProxy:true,
-    secure:true
+    secure:true,
+    httpOnly:true
   })
 );
 
