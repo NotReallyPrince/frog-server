@@ -42,7 +42,7 @@ app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
 app.use(cookieParser('test'))
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 
 app.use(
   cookieSession({
@@ -53,6 +53,7 @@ app.use(
     httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
     sameSite: 'none', // Allows cross-site cookies
     domain: '.apescommunity.com', // Share cookie across subdomains
+  
   })
 );
 
