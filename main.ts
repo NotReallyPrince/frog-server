@@ -41,14 +41,16 @@ app.options('*', cors(corsOptions)); // Preflight requests
 app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
+app.set('trust proxy', 1);
 
 app.use(
   cookieSession({
     name: "session",
     keys: ['adahdhjadad$$' as any],
-    domain:'apescommunity.com',
+    domain:'.apescommunity.com',
     sameSite:'none',
-    maxAge: 60 * 24 * 60 * 60 * 100
+    maxAge: 60 * 24 * 60 * 60 * 100,
+    path:'/'
   })
 );
 
