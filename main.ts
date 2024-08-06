@@ -47,9 +47,10 @@ app.use(
   cookieSession({
     name: "session",
     keys: ['adahdhjadad$$' as any],
-    sameSite:'none',
     maxAge: 60 * 24 * 60 * 60 * 100,
-
+    secureProxy:true,
+    secure:true,
+    httpOnly:true
   })
 );
 
