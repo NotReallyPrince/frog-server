@@ -6,10 +6,10 @@ import {
   getReferalCountFromPublishedDate,
   HomePageUserDetailsController,
   leadershipController,
+  loginController,
   signupController,
   telegramMemberCheckController,
 } from "../controller/user.controller";
-import passport from "../../config/passport";
 import { IAdmin } from "../models/admin.model";
 import { CANCELLED } from "dns";
 
@@ -88,23 +88,16 @@ router.get("/friends/:userId", (req: Request, res: Response) => {
 
 router.post(
   "/admin/login",
-  (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate("local", (err: any, user: IAdmin, info: any) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.status(401).json({ message: "Authentication failed" });
-      }
+  (req: Request, res: Response) => {
+    const body: any = req?.body;
 
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err);
-        }
-
-        res.status(200).json({ message: "Logged in successfully" });
+    loginController(body)
+      .then((data) => {
+        res.status(200).json({ data });
+      })
+      .catch((err) => {
+        res.status(501).json({ message: "Login Failed",err });
       });
-    })(req, res, next);
   }
 );
 
@@ -120,16 +113,7 @@ router.post("/admin/create", (req: Request, res: Response) => {
     });
 });
 
-router.get("/admin/check", (req: Request, res: Response) => {
-  try {
-    if (req?.isAuthenticated()) {
-      return res.status(200).json({ status: true, message: "Authenticated" });
-    }
-    res.status(401).json({ message: "User Not authenticated", status: false });
-  } catch (err) {
-    res.status(501).json({ message: "Something went wrong!" });
-  }
-});
+
 
 router.get("/referal-count/:id", (req: Request, res: Response) => {
   const { id } = req.params;

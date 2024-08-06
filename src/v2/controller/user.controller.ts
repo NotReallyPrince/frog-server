@@ -3,6 +3,7 @@ import { pointsData, pointType } from "../../config/points";
 import { UserModel } from "../models/user.model";
 import calculateYearsAgo from "../../utils/calculateAccountAge";
 import { generatePointsOnRegister } from "../../utils/generatePointsOnRegister";
+import jwt from 'jsonwebtoken';
 import {
   ApeinNameCheck,
   channelMemberCheck,
@@ -175,6 +176,37 @@ export const signupController = (body) => {
       const newUser = new AdminModel({ username, password });
       newUser.save();
       resolve(newUser);
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
+  });
+};
+
+export const loginController = (body) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await AdminModel.findOne({ username:body.username })
+
+      if (!user) {
+        return reject('Invalid Password or Username')
+      }
+
+      const isMatch = await user.comparePassword(body.password);
+
+      if (!isMatch) {
+        return reject('Invalid Password or Username')
+      }
+
+      const token = jwt.sign(
+        { id: user._id, username: user.username }, // Payload (avoid sensitive info)
+        'secret--3',                               // Secret key for signing
+        { expiresIn: '4h' }                       // Options (e.g., token expiration)
+      );
+
+    
+      return resolve({ token, name:user.username });
+
     } catch (err) {
       console.log(err);
       reject(err);
