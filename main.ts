@@ -50,6 +50,7 @@ app.use(
     maxAge: 60 * 24 * 60 * 60 * 100,
     secureProxy:true,
     secure:true,
+    domain:'api.apescommunity.com',
     httpOnly:true
   })
 );
