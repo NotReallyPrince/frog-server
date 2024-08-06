@@ -50,7 +50,7 @@ app.use(
     sameSite:'none',
     maxAge: 60 * 24 * 60 * 60 * 100,
     secureProxy:true,
-    secure:true,
+    secure:false,
     httpOnly:true
   })
 );
