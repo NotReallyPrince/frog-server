@@ -9,7 +9,6 @@ import userV2Router from './src/v2/routes/user.routes';
 import { Markup, Telegraf, Context } from 'telegraf'; // Importing Context
 import { createUserHelper, CreateUser } from './src/v2/controller/user.controller';
 import passport from 'passport';
-import { isAuthenticated } from './src/v2/middlewares/requestValidators/auth.middleware';
 import cookieParser from 'cookie-parser'
 import cookieSession from 'cookie-session'
 
@@ -47,6 +46,7 @@ app.use(
   cookieSession({
     name: "session",
     keys: ['test' as any],
+    secure:true,
     maxAge: 60 * 24 * 60 * 60 * 100
   })
 );

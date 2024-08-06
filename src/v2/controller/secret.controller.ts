@@ -2,7 +2,7 @@ import { pointType } from "../../config/points";
 import { generateToken, getExpiryDate } from "../helper/secret.helper";
 import { PointsModel } from "../models/points.model";
 import { TokenModel } from "../models/secret.model";
-import { findToken, getActiveToken } from "../queries/secret.queries";
+import { findToken, getAllTokens } from "../queries/secret.queries";
 
 export const generateTokenController = (userId) => {
   return new Promise(async (resolve, reject) => {
@@ -18,7 +18,7 @@ export const generateTokenController = (userId) => {
 export const getTokens = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const tokens = await getActiveToken();
+      const tokens = await getAllTokens();
       resolve(tokens);
     } catch (error) {
       reject(error);

@@ -1,7 +1,9 @@
 import { IToken, TokenModel } from "../models/secret.model";
 
-export const getActiveToken = async () => {
-  return await TokenModel.find({ expiryTime: { $gt: new Date() } });
+
+
+export const getAllTokens = async () => {
+  return await TokenModel.find();
 };
 
 export const findToken = async (token: string): Promise<IToken | null> => {
