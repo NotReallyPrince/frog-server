@@ -4,13 +4,13 @@ import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
 import { connectDatabase } from './src/config/databaseConnection';
 import dotenv from 'dotenv';
+import session from 'express-session';
 import secretRouter from './src/v2/routes/secret.routes';
 import userV2Router from './src/v2/routes/user.routes';
 import { Markup, Telegraf, Context } from 'telegraf'; // Importing Context
 import { createUserHelper, CreateUser } from './src/v2/controller/user.controller';
 import passport from 'passport';
-import cookieParser from 'cookie-parser'
-import cookieSession from 'cookie-session'
+import { isAuthenticated } from './src/v2/middlewares/requestValidators/auth.middleware';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5200;
 
 // CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app','https://apes787fk.apescommunity.com'],
+  origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app','https://bot-admin-panel-phi.vercel.app'],
   credentials: true,
 };
 
@@ -41,37 +41,17 @@ app.options('*', cors(corsOptions)); // Preflight requests
 app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
-app.use(cookieParser('test'))
-app.set('trust proxy', 1);
 
-app.use(
-  cookieSession({
-    name: 'session',
-    keys: ['test'], // Use your secret key
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    secure: true,   // Ensures cookies are sent only over HTTPS
-    httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
-    sameSite: 'none', // Allows cross-site cookies
-    domain: '.apescommunity.com', // Share cookie across subdomains
-  
-  })
-);
-
-app.use(function(req, _, next) {
-  if (req.session && !req.session.regenerate) {
-    console.log(req.session)
-      req.session.regenerate = (cb:any) => {
-          cb()
-      }
-  }
-  if (req.session && !req.session.save) {
-      req.session.save = (cb: any) => {
-          cb()
-      }
-  }
-  next()
-})
-
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Ensure cookies are only sent over HTTPS
+    sameSite: false, 
+    maxAge: 24 * 60 * 60 * 1000
+  },
+}));
 
 
 app.use(passport.initialize());
