@@ -45,8 +45,8 @@ app.use(bodyParser.json());
 app.use(
   cookieSession({
     name: "session",
-    keys: ['test' as any],
-    domain:'.apescommunity.com',
+    keys: ['adahdhjadad$$' as any],
+    domain:'apes787fk.apescommunity.com',
     maxAge: 60 * 24 * 60 * 60 * 100
   })
 );
