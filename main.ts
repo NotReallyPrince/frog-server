@@ -42,15 +42,20 @@ app.use(express.urlencoded({ limit: 50 * 1024 * 1024 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json());
 
+app.set('trust proxy',1)
+
 app.use(session({
   secret: 'your_secret_key',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
-    secure: false, // Ensure cookies are only sent over HTTPS
+    secure: true, // Ensure cookies are only sent over HTTPS
     sameSite: false, 
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly:true,
+    
   },
+  proxy:true
 }));
 
 
