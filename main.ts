@@ -51,12 +51,14 @@ app.use(
     secureProxy:true,
     secure:true,
     domain:'api.apescommunity.com',
-    httpOnly:true
+    httpOnly:true,
+    sameSite:'lax'
   })
 );
 
 app.use(function(req, _, next) {
   if (req.session && !req.session.regenerate) {
+    console.log(req.session)
       req.session.regenerate = (cb:any) => {
           cb()
       }
