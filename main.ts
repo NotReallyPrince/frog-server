@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5200;
 
 // CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app','https://bot-admin-panel-phi.vercel.app'],
+  origin: ['http://localhost:5173', 'https://frog-frontend.vercel.app','https://apes787fk.apescommunity.com'],
   credentials: true,
 };
 
