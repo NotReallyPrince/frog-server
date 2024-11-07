@@ -9,8 +9,6 @@ import userV2Router from './src/v2/routes/user.routes';
 import { Markup, Telegraf, Context } from 'telegraf'; // Importing Context
 import { createUserHelper, CreateUser } from './src/v2/controller/user.controller';
 
-
-// Load environment variables from .env file
 dotenv.config();
 
 // Initialize Express application
